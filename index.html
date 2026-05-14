@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendei. | Gestão Inteligente para Barbeiros</title>
+    <title>Agendei. | Gestão Premium para Barbearias</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
@@ -16,227 +16,269 @@
             overflow-x: hidden;
         }
         .orange-glow {
-            box-shadow: 0 0 50px -12px rgba(253, 150, 2, 0.3);
+            box-shadow: 0 0 80px -20px rgba(253, 150, 2, 0.4);
         }
         .gradient-text {
-            background: linear-gradient(135deg, #ffffff 0%, #fd9602 100%);
+            background: linear-gradient(135deg, #ffffff 30%, #fd9602 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+        .integration-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(253, 150, 2, 0.5);
+            background: rgba(253, 150, 2, 0.05);
+        }
+        .sidebar-blur {
+            backdrop-filter: blur(20px);
+            background: rgba(9, 9, 11, 0.7);
+        }
+        #cursor-glow {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(253, 150, 2, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            position: fixed;
+            z-index: 1;
+            transform: translate(-50%, -50%);
         }
     </style>
 </head>
 <body>
+    <div id="cursor-glow"></div>
+
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 px-6 py-8 flex justify-between items-center backdrop-blur-md bg-black/20">
-        <div class="text-2xl font-black tracking-tighter flex items-center gap-2">
-            <div class="w-10 h-10 bg-[#fd9602] rounded-xl flex items-center justify-center text-zinc-950">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3 3 6"/><path d="M15 3h6v6"/><path d="M10 8.5 4.5 3"/><path d="m14.5 9 5.5-5.5"/><circle cx="10" cy="16" r="3"/><circle cx="14" cy="16" r="3"/><path d="M13 19l2 2"/><path d="M11 19l-2 2"/></svg>
+    <nav class="fixed w-full z-[100] px-8 py-8 flex justify-between items-center bg-zinc-950/20 backdrop-blur-xl border-b border-white/5">
+        <div class="flex items-center gap-4 group cursor-pointer">
+            <div style="background-color: #fd9602" class="p-2.5 rounded-xl shadow-[0_0_20px_rgba(253,150,2,0.4)] transition-all group-hover:scale-110">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-950"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="12.59" x2="20" y2="18"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
             </div>
-            Agendei<span class="text-[#fd9602]">.</span>
+            <h1 class="text-2xl font-black tracking-tighter text-white">
+                Agendei<span style="color: #fd9602">.</span>
+            </h1>
         </div>
-        <div class="hidden md:flex gap-8 font-bold text-sm text-zinc-400">
-            <a href="#recursos" class="hover:text-white transition-colors">Recursos</a>
-            <a href="#sobre" class="hover:text-white transition-colors">Sobre</a>
-            <a href="#possibilidades" class="hover:text-white transition-colors">Possibilidades</a>
+        
+        <div class="hidden lg:flex gap-10 font-bold text-xs uppercase tracking-widest text-zinc-500">
+            <a href="#recursos" class="hover:text-white transition-colors">Funcionalidades</a>
+            <a href="#ecossistema" class="hover:text-white transition-colors">Ecossistema</a>
+            <a href="#criadores" class="hover:text-white transition-colors">Criadores</a>
         </div>
-        <a href="https://agendei-alpha.vercel.app" target="_blank" class="px-6 py-3 bg-white text-zinc-950 rounded-full font-black text-xs hover:scale-105 transition-all shadow-xl">ACESSAR DASHBOARD</a>
+
+        <a href="https://agendei-alpha.vercel.app" target="_blank" class="px-8 py-3.5 bg-[#fd9602] text-zinc-950 rounded-2xl font-black text-xs hover:scale-105 active:scale-95 transition-all shadow-2xl shadow-[#fd9602]/20">
+            DASHBOARD ALPHA
+        </a>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="min-h-screen flex flex-col items-center justify-center pt-32 px-6 relative overflow-hidden">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#fd9602]/10 blur-[120px] -z-10 rounded-full"></div>
+    <!-- Hero -->
+    <section class="min-h-screen flex flex-col items-center justify-center pt-32 px-6 relative">
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-[#fd9602]/5 blur-[150px] -z-10"></div>
         
-        <div class="max-w-4xl text-center space-y-8" id="hero-content">
-            <span class="px-4 py-2 bg-[#fd9602]/10 border border-[#fd9602]/20 rounded-full text-[#fd9602] text-[10px] font-black uppercase tracking-[0.2em] inline-block mb-4">
-                Lançamento Alpha 2026
-            </span>
-            <h1 class="text-6xl md:text-8xl font-black tracking-tight leading-[0.9] gradient-text">
-                O futuro da sua <br> barbearia é agora.
+        <div class="max-w-5xl text-center space-y-10" id="hero-trigger">
+            <div class="inline-flex items-center gap-2 px-4 py-2 bg-zinc-900 border border-white/10 rounded-full text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 mb-4 reveal">
+                <span class="w-2 h-2 rounded-full bg-[#fd9602] animate-pulse"></span>
+                Disponível para Parcerias 2026
+            </div>
+            <h1 class="text-7xl md:text-9xl font-black tracking-tighter leading-[0.85] gradient-text reveal">
+                REDEFININDO A <br> ARTE DE GERIR.
             </h1>
-            <p class="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto font-medium">
-                Gestão simplificada, design premium e inteligência de dados para levar o seu salão ao próximo nível.
+            <p class="text-zinc-500 text-lg md:text-2xl max-w-3xl mx-auto font-medium leading-relaxed reveal">
+                O Agendei. não é apenas um software, é o parceiro estratégico que a sua barbearia precisa para escalar com elegância e precisão.
             </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center pt-4">
-                <a href="https://agendei-alpha.vercel.app" target="_blank" class="px-10 py-5 bg-[#fd9602] text-zinc-950 rounded-2xl font-black text-lg hover:scale-105 transition-all shadow-2xl shadow-[#fd9602]/20 group">
-                    Começar Gratuitamente 
-                    <svg class="inline-block ml-2 group-hover:translate-x-1 transition-transform" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
-                </a>
-                <span class="text-zinc-600 text-sm font-bold uppercase tracking-widest">Sem cartão de crédito</span>
-            </div>
         </div>
 
-        <!-- Laptop Mockup -->
-        <div class="mt-20 w-full max-w-6xl relative perspective-1000" id="laptop-trigger">
-            <div class="relative z-10 p-4 bg-zinc-900/50 border border-white/5 rounded-[32px] orange-glow" id="laptop-mockup">
-                <img src="mockup-laptop.png" alt="Agendei Dashboard" class="w-full rounded-[24px]">
+        <!-- Real Mockup Reveal -->
+        <div class="mt-24 w-full max-w-6xl px-4 relative" id="mockup-trigger">
+            <div class="relative z-10 p-2 bg-white/5 border border-white/10 rounded-[40px] shadow-2xl overflow-hidden orange-glow">
+                <img src="mockup-laptop-real.png" alt="Interface Real Agendei" class="w-full rounded-[32px] scale-105 transform transition-transform duration-1000" id="main-mockup">
+            </div>
+            <!-- Decorative dots -->
+            <div class="absolute -top-10 -right-10 w-40 h-40 bg-[#fd9602]/20 blur-3xl -z-10"></div>
+            <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-[#fd9602]/20 blur-3xl -z-10"></div>
+        </div>
+    </section>
+
+    <!-- Recursos (Grid Profissional) -->
+    <section id="recursos" class="py-40 px-6">
+        <div class="max-w-7xl mx-auto space-y-20">
+            <div class="max-w-2xl">
+                <h2 class="text-5xl font-black tracking-tight mb-6">Tudo o que você <br> precisa em um só lugar.</h2>
+                <div class="h-1.5 w-24 bg-[#fd9602] rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="p-10 bg-zinc-900/50 border border-white/5 rounded-[40px] space-y-8 hover:bg-zinc-900 transition-all feature-box">
+                    <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-[#fd9602]">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                    </div>
+                    <h3 class="text-xl font-black">Agenda Híbrida</h3>
+                    <p class="text-zinc-500 text-sm font-bold leading-relaxed">Visualização multicanal para barbeiros e recepção, sincronizada em milissegundos.</p>
+                </div>
+                <!-- Outros recursos... (Simplificado para brevidade mas mantendo o estilo) -->
+                <div class="p-10 bg-zinc-900/50 border border-white/5 rounded-[40px] space-y-8 hover:bg-zinc-900 transition-all feature-box">
+                    <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-blue-500">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                    </div>
+                    <h3 class="text-xl font-black">Fluxo Financeiro</h3>
+                    <p class="text-zinc-500 text-sm font-bold leading-relaxed">Gráficos de performance e saúde financeira com análise de DRE simplificada.</p>
+                </div>
+                <div class="p-10 bg-zinc-900/50 border border-white/5 rounded-[40px] space-y-8 hover:bg-zinc-900 transition-all feature-box">
+                    <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-emerald-500">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <h3 class="text-xl font-black">CRM Inteligente</h3>
+                    <p class="text-zinc-500 text-sm font-bold leading-relaxed">Histórico detalhado por cliente, permitindo campanhas de fidelização precisas.</p>
+                </div>
+                <div class="p-10 bg-zinc-900/50 border border-white/5 rounded-[40px] space-y-8 hover:bg-zinc-900 transition-all feature-box">
+                    <div class="w-14 h-14 bg-white/5 rounded-2xl flex items-center justify-center text-purple-500">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="m9.09 9 1.15 4h3.52l1.15-4"/><path d="M12 17h.01"/></svg>
+                    </div>
+                    <h3 class="text-xl font-black">Metas Ativas</h3>
+                    <p class="text-zinc-500 text-sm font-bold leading-relaxed">Gamificação do faturamento para manter a equipe focada no crescimento constante.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Features Section -->
-    <section id="recursos" class="py-32 px-6">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="p-10 rounded-[40px] bg-zinc-900/40 border border-white/5 space-y-6 hover:border-[#fd9602]/30 transition-all feature-card">
-                <div class="w-16 h-16 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                </div>
-                <h3 class="text-2xl font-bold">Agenda em Tempo Real</h3>
-                <p class="text-zinc-500 font-medium">Sincronização instantânea de todos os agendamentos. Nunca mais perca um cliente por conflitos de horário.</p>
+    <!-- Ecossistema de Integrações -->
+    <section id="ecossistema" class="py-40 bg-white/5 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-6 text-center space-y-20">
+            <div class="space-y-6">
+                <h2 class="text-5xl font-black tracking-tight">O Poder das Gigantes.</h2>
+                <p class="text-zinc-500 text-xl font-medium">Construído sobre os ombros das tecnologias mais sólidas do mercado.</p>
             </div>
-            <div class="p-10 rounded-[40px] bg-zinc-900/40 border border-white/5 space-y-6 hover:border-[#fd9602]/30 transition-all feature-card">
-                <div class="w-16 h-16 bg-[#fd9602]/10 rounded-2xl flex items-center justify-center text-[#fd9602]">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8" id="integration-grid">
+                <div class="p-8 rounded-3xl bg-zinc-900/50 border border-white/5 space-y-4 integration-card transition-all">
+                    <img src="https://vpalasmdcxnhpsbwmsqq.supabase.co/storage/v1/object/public/logos/supabase.png" alt="Supabase" class="w-12 h-12 mx-auto grayscale hover:grayscale-0 transition-all">
+                    <h4 class="font-black text-xs uppercase tracking-widest">Supabase (Database)</h4>
                 </div>
-                <h3 class="text-2xl font-bold">Financeiro Transparente</h3>
-                <p class="text-zinc-500 font-medium">Controle de entradas, saídas e faturamento bruto com gráficos intuitivos e análise de metas semanais.</p>
-            </div>
-            <div class="p-10 rounded-[40px] bg-zinc-900/40 border border-white/5 space-y-6 hover:border-[#fd9602]/30 transition-all feature-card">
-                <div class="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                <div class="p-8 rounded-3xl bg-zinc-900/50 border border-white/5 space-y-4 integration-card transition-all">
+                    <img src="https://www.gstatic.com/devrel-devsite/prod/v2385b2e3f5d54203770172e27602e1c3a6493976837894a4c519280f90c6a2e4/firebase/images/touchicon-180.png" alt="Firebase" class="w-12 h-12 mx-auto grayscale hover:grayscale-0 transition-all">
+                    <h4 class="font-black text-xs uppercase tracking-widest">Firebase Analytics</h4>
                 </div>
-                <h3 class="text-2xl font-bold">Base de Clientes</h3>
-                <p class="text-zinc-500 font-medium">Conheça seus clientes, histórico de serviços e frequência. Fidelize quem mais importa com inteligência.</p>
+                <div class="p-8 rounded-3xl bg-zinc-900/50 border border-white/5 space-y-4 integration-card transition-all">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" class="w-12 h-12 mx-auto grayscale hover:grayscale-0 transition-all">
+                    <h4 class="font-black text-xs uppercase tracking-widest">Google OAuth 2.0</h4>
+                </div>
+                <div class="p-8 rounded-3xl bg-zinc-900/50 border border-white/5 space-y-4 integration-card transition-all">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" class="w-12 h-12 mx-auto grayscale hover:grayscale-0 transition-all">
+                    <h4 class="font-black text-xs uppercase tracking-widest">WhatsApp Business</h4>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Mobile Showcase Section -->
-    <section id="sobre" class="py-32 px-6 bg-white/5 relative">
-        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-20">
-            <div class="flex-1 space-y-8" id="mobile-text">
-                <h2 class="text-5xl font-black tracking-tight leading-[1.1]">Sua barbearia no bolso. <br> Literalmente.</h2>
-                <p class="text-zinc-400 text-lg font-medium leading-relaxed">
-                    Desenvolvemos uma interface ultra-responsiva que se adapta a qualquer dispositivo. Gerencie seus barbeiros, horários e lucros diretamente do seu smartphone, com a mesma fluidez do desktop.
+    <!-- Criadores -->
+    <section id="criadores" class="py-40 px-6">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-20 items-center">
+            <div class="flex-1">
+                <div class="relative w-full max-w-md aspect-square rounded-[60px] overflow-hidden border-2 border-[#fd9602]/20 group">
+                    <div class="absolute inset-0 bg-[#fd9602]/10 z-10 group-hover:opacity-0 transition-opacity"></div>
+                    <img src="https://avatars.githubusercontent.com/u/108341604?v=4" alt="Matheus Lucindo" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700">
+                </div>
+            </div>
+            <div class="flex-1 space-y-10">
+                <span class="text-[#fd9602] font-black text-xs uppercase tracking-[0.4em]">A Mente Criativa</span>
+                <h2 class="text-6xl font-black tracking-tight leading-tight">Matheus <br> Lucindo.</h2>
+                <p class="text-zinc-500 text-xl font-medium leading-relaxed">
+                    "O Agendei. nasceu da necessidade de elevar o padrão de serviço no setor de estética masculina. Não queríamos apenas um sistema, queríamos uma obra de arte tecnológica que fosse tão afiada quanto a navalha de um mestre barbeiro."
                 </p>
-                <ul class="space-y-4">
-                    <li class="flex items-center gap-3 text-white font-bold">
-                        <div class="w-6 h-6 rounded-full bg-[#fd9602] flex items-center justify-center">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-950"><path d="M20 6 9 17l-5-5"/></svg>
-                        </div>
-                        Notificações de Novos Agendamentos
-                    </li>
-                    <li class="flex items-center gap-3 text-white font-bold">
-                        <div class="w-6 h-6 rounded-full bg-[#fd9602] flex items-center justify-center">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-950"><path d="M20 6 9 17l-5-5"/></svg>
-                        </div>
-                        WhatsApp Automático para Clientes
-                    </li>
-                    <li class="flex items-center gap-3 text-white font-bold">
-                        <div class="w-6 h-6 rounded-full bg-[#fd9602] flex items-center justify-center">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" class="text-zinc-950"><path d="M20 6 9 17l-5-5"/></svg>
-                        </div>
-                        Bloqueio de Horários em Segundos
-                    </li>
-                </ul>
-            </div>
-            <div class="flex-1 relative" id="mobile-mockup-container">
-                <div class="absolute inset-0 bg-[#fd9602]/20 blur-[100px] rounded-full"></div>
-                <img src="mockup-mobile.png" alt="Mobile App" class="w-full max-w-[400px] mx-auto relative z-10 drop-shadow-2xl" id="mobile-mockup">
+                <div class="flex gap-4">
+                    <a href="#" class="w-12 h-12 rounded-2xl bg-zinc-900 border border-white/5 flex items-center justify-center hover:bg-[#fd9602] hover:text-zinc-950 transition-all">
+                        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section id="possibilidades" class="py-40 px-6 text-center">
-        <div class="max-w-4xl mx-auto space-y-12 bg-gradient-to-br from-zinc-900 to-black p-16 rounded-[60px] border border-white/5 relative overflow-hidden" id="cta-card">
-            <div class="absolute top-0 right-0 w-64 h-64 bg-[#fd9602]/10 blur-[80px] -z-10 rounded-full"></div>
-            <h2 class="text-5xl font-black tracking-tight leading-tight">Pronto para transformar <br> seu negócio?</h2>
-            <p class="text-zinc-500 text-xl font-medium max-w-2xl mx-auto">
-                Junte-se a centenas de barbearias que já estão usando o Agendei. para automatizar processos e faturar mais.
-            </p>
-            <div class="pt-4">
-                <a href="https://agendei-alpha.vercel.app" target="_blank" class="px-12 py-6 bg-white text-zinc-950 rounded-3xl font-black text-xl hover:scale-105 transition-all shadow-2xl inline-block">
-                    ACESSAR AGORA
-                </a>
+    <footer class="py-20 px-8 border-t border-white/5 bg-black">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+            <div class="flex items-center gap-4">
+                <div style="background-color: #fd9602" class="p-2 rounded-xl">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" class="text-zinc-950"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="12.59" x2="20" y2="18"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
+                </div>
+                <h2 class="text-xl font-black tracking-tighter">Agendei<span style="color: #fd9602">.</span></h2>
             </div>
-            <p class="text-zinc-600 font-bold uppercase tracking-widest text-xs">Versão Alpha Gratuita para Testes</p>
+            <p class="text-zinc-600 font-bold text-sm uppercase tracking-widest text-center">Inovando o mercado de estética desde 2026</p>
+            <a href="https://agendei-alpha.vercel.app" class="text-white font-black text-sm border-b-2 border-[#fd9602] pb-1 hover:text-[#fd9602] transition-all">QUERO MEU ACESSO</a>
         </div>
-    </section>
-
-    <footer class="py-20 px-6 border-t border-white/5 text-center">
-        <p class="text-zinc-600 font-bold text-sm">© 2026 Agendei. Todos os direitos reservados.</p>
     </footer>
 
     <script>
         gsap.registerPlugin(ScrollTrigger);
 
-        // Hero Animations
-        gsap.from("#hero-content > *", {
-            y: 50,
-            opacity: 0,
-            duration: 1,
-            stagger: 0.2,
-            ease: "power4.out"
+        // Glow Follower
+        document.addEventListener("mousemove", (e) => {
+            gsap.to("#cursor-glow", {
+                left: e.clientX,
+                top: e.clientY,
+                duration: 0.5,
+                ease: "power2.out"
+            });
         });
 
-        gsap.from("#laptop-mockup", {
-            scale: 0.8,
-            opacity: 0,
-            duration: 1.5,
-            delay: 0.5,
-            ease: "expo.out"
+        // Reveal Animations
+        const reveals = document.querySelectorAll(".reveal");
+        reveals.forEach((el, i) => {
+            gsap.from(el, {
+                y: 50,
+                opacity: 0,
+                duration: 1.2,
+                delay: i * 0.15,
+                ease: "power4.out"
+            });
         });
 
-        // Scroll Parallax for Laptop
-        gsap.to("#laptop-mockup", {
+        // Mockup Parallax
+        gsap.to("#main-mockup", {
             scrollTrigger: {
-                trigger: "#laptop-trigger",
-                start: "top bottom",
+                trigger: "#mockup-trigger",
+                start: "top 80%",
                 end: "bottom top",
-                scrub: 1
+                scrub: 1.5
             },
-            y: -100,
-            rotateX: 10
+            y: -150,
+            scale: 1.1,
+            rotateX: 5
         });
 
-        // Feature Cards Animation
-        gsap.from(".feature-card", {
+        // Feature Boxes
+        gsap.from(".feature-box", {
             scrollTrigger: {
                 trigger: "#recursos",
-                start: "top 80%",
-            },
-            y: 100,
-            opacity: 0,
-            duration: 1,
-            stagger: 0.2,
-            ease: "power3.out"
-        });
-
-        // Mobile Showcase Animation
-        gsap.from("#mobile-text > *", {
-            scrollTrigger: {
-                trigger: "#sobre",
                 start: "top 70%",
-            },
-            x: -50,
-            opacity: 0,
-            duration: 1,
-            stagger: 0.15,
-            ease: "power2.out"
-        });
-
-        gsap.from("#mobile-mockup", {
-            scrollTrigger: {
-                trigger: "#sobre",
-                start: "top 70%",
-            },
-            x: 50,
-            opacity: 0,
-            scale: 0.9,
-            duration: 1.2,
-            ease: "power4.out"
-        });
-
-        // CTA Card Reveal
-        gsap.from("#cta-card", {
-            scrollTrigger: {
-                trigger: "#possibilidades",
-                start: "top 80%",
             },
             y: 50,
             opacity: 0,
-            duration: 1.5,
+            duration: 0.8,
+            stagger: 0.1,
+            ease: "back.out(1.7)"
+        });
+
+        // Integrations Grid
+        gsap.from(".integration-card", {
+            scrollTrigger: {
+                trigger: "#integration-grid",
+                start: "top 80%",
+            },
+            scale: 0.5,
+            opacity: 0,
+            duration: 0.6,
+            stagger: 0.1,
             ease: "elastic.out(1, 0.5)"
+        });
+
+        // Founders section
+        gsap.from("#criadores img", {
+            scrollTrigger: {
+                trigger: "#criadores",
+                start: "top 60%",
+            },
+            scale: 1.2,
+            opacity: 0,
+            duration: 1.5,
+            ease: "power4.out"
         });
     </script>
 </body>
