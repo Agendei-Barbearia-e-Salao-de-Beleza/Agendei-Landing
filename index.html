@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <!-- Lenis Smooth Scroll Library -->
     <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -18,17 +17,22 @@
         .glass { background: rgba(255,255,255,0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); }
         .hero-gradient { background: radial-gradient(circle at 50% 50%, rgba(253, 150, 2, 0.08) 0%, transparent 70%); }
         .lang-btn.active { background: var(--primary); color: #000; }
-        /* Hardware Acceleration */
         .accelerate { will-change: transform, opacity; }
-        .feature-card { transition: border-color 0.4s ease, background 0.4s ease; }
-        .feature-card:hover { border-color: var(--primary); background: rgba(253,150,2,0.03); }
+        
+        /* Marquee Styles */
+        .marquee { position: relative; width: 100vw; max-width: 100%; height: 80px; overflow-x: hidden; }
+        .track { position: absolute; white-space: nowrap; will-change: transform; animation: marquee 30s linear infinite; }
+        .track2 { animation: marquee-reverse 35s linear infinite; }
+        .track:hover { animation-play-state: paused; }
+        @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @keyframes marquee-reverse { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+        .logo-item { display: inline-block; padding: 0 40px; grayscale: 100%; opacity: 0.4; transition: all 0.4s ease; }
+        .logo-item:hover { grayscale: 0%; opacity: 1; transform: scale(1.1); }
+        .logo-item img { height: 30px; width: auto; }
+
         section { padding: 120px 0; }
-        /* Lenis CSS */
         html.lenis { height: auto; }
         .lenis.lenis-smooth { scroll-behavior: auto !important; }
-        .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
-        .lenis.lenis-stopped { overflow: hidden; }
-        .lenis.lenis-scrolling iframe { pointer-events: none; }
     </style>
 </head>
 <body class="accelerate">
@@ -40,7 +44,7 @@
             <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(253,150,2,0.3)]">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="12.59" x2="20" y2="18"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
             </div>
-            <span class="text-xl font-extrabold tracking-tighter">AGENDEI<span class="text-primary">.</span></span>
+            <span class="text-xl font-extrabold tracking-tighter uppercase">AGENDEI<span class="text-primary">.</span></span>
         </div>
 
         <div class="hidden lg:flex items-center gap-10 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
@@ -61,7 +65,7 @@
     </nav>
 
     <!-- Hero -->
-    <section class="min-h-screen flex flex-col items-center justify-center pt-32 px-6" id="inicio">
+    <section class="min-h-screen flex flex-col items-center justify-center pt-32 px-6 pb-0" id="inicio">
         <div class="max-w-5xl text-center space-y-8 mb-24 hero-reveal">
             <div class="inline-block px-4 py-1.5 glass rounded-full text-primary text-[10px] font-black uppercase tracking-widest mb-4">
                 Barbershop Management System v1.0
@@ -74,9 +78,51 @@
             </p>
         </div>
 
-        <div class="w-full max-w-6xl relative" id="mockup-trigger">
+        <!-- Tech Marquee Section -->
+        <div class="w-full py-10 space-y-4 opacity-0" id="marquee-section">
+            <p class="text-center text-zinc-600 font-bold text-[9px] uppercase tracking-[0.4em] mb-8" data-i18n="marquee_title">Powered by world-class technologies</p>
+            
+            <!-- Row 1 -->
+            <div class="marquee">
+                <div class="track">
+                    <!-- Tech Logos (Duplicated for infinite loop) -->
+                    <div class="logo-item"><img src="https://vpalasmdcxnhpsbwmsqq.supabase.co/storage/v1/object/public/logos/supabase.png" alt="Supabase"></div>
+                    <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React"></div>
+                    <div class="logo-item"><img src="https://www.gstatic.com/devrel-devsite/prod/v2385b2e3f5d54203770172e27602e1c3a6493976837894a4c519280f90c6a2e4/firebase/images/touchicon-180.png" alt="Firebase"></div>
+                    <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="Tailwind"></div>
+                    <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="TypeScript"></div>
+                    <div class="logo-item"><img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/scissors.svg" alt="Lucide"></div>
+                    <!-- Duplicate -->
+                    <div class="logo-item"><img src="https://vpalasmdcxnhpsbwmsqq.supabase.co/storage/v1/object/public/logos/supabase.png" alt="Supabase"></div>
+                    <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg" alt="React"></div>
+                    <div class="logo-item"><img src="https://www.gstatic.com/devrel-devsite/prod/v2385b2e3f5d54203770172e27602e1c3a6493976837894a4c519280f90c6a2e4/firebase/images/touchicon-180.png" alt="Firebase"></div>
+                    <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d5/Tailwind_CSS_Logo.svg" alt="Tailwind"></div>
+                    <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/4/4c/Typescript_logo_2020.svg" alt="TypeScript"></div>
+                    <div class="logo-item"><img src="https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/scissors.svg" alt="Lucide"></div>
+                </div>
+            </div>
+
+            <!-- Row 2 (Reverse) -->
+            <div class="marquee">
+                <div class="track track2">
+                    <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"></div>
+                    <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google"></div>
+                    <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub"></div>
+                    <div class="logo-item"><img src="https://raw.githubusercontent.com/greensock/GreenSock-JS/master/src/images/gsap-logo.svg" alt="GSAP"></div>
+                    <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" alt="Node.js"></div>
+                    <!-- Duplicate -->
+                    <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"></div>
+                    <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google"></div>
+                    <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg" alt="GitHub"></div>
+                    <div class="logo-item"><img src="https://raw.githubusercontent.com/greensock/GreenSock-JS/master/src/images/gsap-logo.svg" alt="GSAP"></div>
+                    <div class="logo-item"><img src="https://upload.wikimedia.org/wikipedia/commons/d/d9/Node.js_logo.svg" alt="Node.js"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="w-full max-w-6xl relative mt-20" id="mockup-trigger">
             <div class="glass rounded-[32px] p-2 shadow-2xl overflow-hidden relative group border-white/10 mockup-anim">
-                <img src="https://vpalasmdcxnhpsbwmsqq.supabase.co/storage/v1/object/public/logos/mockup_agendei_real.png" alt="Agendei Dashboard" class="w-full rounded-2xl transform transition-transform duration-700">
+                <img src="https://vpalasmdcxnhpsbwmsqq.supabase.co/storage/v1/object/public/logos/mockup_agendei_real.png" alt="Agendei Dashboard" class="w-full rounded-2xl">
             </div>
         </div>
     </section>
@@ -201,26 +247,16 @@
     </footer>
 
     <script>
-        // 1. Lenis Smooth Scroll Init
-        const lenis = new Lenis({
-            duration: 1.4,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smoothWheel: true
-        });
-
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
+        const lenis = new Lenis({ duration: 1.4, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
         requestAnimationFrame(raf);
 
-        // 2. Translations
         const translations = {
             pt: {
                 nav_platform: "Plataforma", nav_eco: "Ecossistema", nav_team: "Criadores", nav_faq: "FAQ",
                 hero_title: "GERENCIE COM <br> <span class='text-primary'>PRECISÃO.</span>",
                 hero_desc: "A plataforma definitiva para barbearias que buscam excelência operacional e faturamento inteligente.",
-                nav_app: "Entrar",
+                nav_app: "Entrar", marquee_title: "Impulsionado pelas melhores tecnologias do mundo",
                 plat_title: "Uma ferramenta, <br> infinitas possibilidades.",
                 plat_desc: "O Agendei foi projetado para cobrir cada centímetro da operação do seu negócio.",
                 feat_1_title: "Agenda Dinâmica", feat_1_desc: "Sincronização em tempo real para evitar conflitos de horários e otimizar a produtividade.",
@@ -238,7 +274,7 @@
                 nav_platform: "Platform", nav_eco: "Ecosystem", nav_team: "Creators", nav_faq: "FAQ",
                 hero_title: "MANAGE WITH <br> <span class='text-primary'>PRECISION.</span>",
                 hero_desc: "The definitive platform for barbershops seeking operational excellence and intelligent revenue.",
-                nav_app: "Launch",
+                nav_app: "Launch", marquee_title: "Powered by world-class technologies",
                 plat_title: "One tool, <br> infinite possibilities.",
                 plat_desc: "Agendei was designed to cover every inch of your business operation.",
                 feat_1_title: "Dynamic Agenda", feat_1_desc: "Real-time sync to prevent conflicts and boost barber productivity.",
@@ -256,17 +292,17 @@
                 nav_platform: "Plataforma", nav_eco: "Ecosistema", nav_team: "Creadores", nav_faq: "FAQ",
                 hero_title: "GESTIONE CON <br> <span class='text-primary'>PRECISIÓN.</span>",
                 hero_desc: "La plataforma definitiva para barberías que buscan excelencia operativa y facturación inteligente.",
-                nav_app: "Entrar",
+                nav_app: "Entrar", marquee_title: "Impulsado por las mejores tecnologías del mundo",
                 plat_title: "Uma herramienta, <br> infinitas posibilidades.",
                 plat_desc: "Agendei fue diseñado para cubrir cada centímetro de la operación de su negocio.",
-                feat_1_title: "Agenda Dinámica", feat_1_desc: "Sincronización en tiempo real para evitar conflictos y optimizar productividad.",
+                feat_1_title: "Agenda Dinámica", feat_1_desc: "Sincronización en tempo real para evitar conflictos y optimizar productividad.",
                 feat_2_title: "Gestión Financiera", feat_2_desc: "Control de caja, gastos y metas con tableros visuales de alta precisión.",
                 feat_3_title: "CRM de Clientes", feat_3_desc: "Base de datos completa con historial de servicios para fidelización.",
-                eco_title: "Stack de Alto Rendimiento", eco_desc: "Utilizamos las tecnologías que sustentam as maiores plataformas.",
+                eco_title: "Stack de Alto Rendimiento", eco_desc: "Utilizamos las tecnologías que sustentan las plataformas más grandes.",
                 team_title: "Los Creadores", team_subtitle: "Mentes detrás del proyecto", role_matheus: "Dev y Gerente",
                 faq_title: "Dudas Frecuentes",
-                faq_q1: "¿El sistema es gratis?", faq_a1: "Sí, la versión Alpha está disponible gratuitamente para pruebas.",
-                faq_q2: "¿Es seguro usar Google Auth?", faq_a2: "Sí, usamos OAuth 2.0, el estándar de seguridad más alto.",
+                faq_q1: "¿El sistema é grátis?", faq_a1: "Sí, la versión Alpha está disponible gratuitamente para pruebas.",
+                faq_q2: "¿É seguro usar Google Auth?", faq_a2: "Sí, usamos OAuth 2.0, el estándar de seguridad más alto.",
                 faq_q3: "¿Tiene soporte para WhatsApp?", faq_a3: "¡Sí! Integración para recordatorios y confirmaciones directas.",
                 footer_rights: "© 2026 Agendei. Todos los derechos reservados."
             }
@@ -281,40 +317,13 @@
             document.getElementById(`btn-${lang}`).classList.add('active');
         }
 
-        // 3. GSAP Animations v6.0
         gsap.registerPlugin(ScrollTrigger);
-
-        // Hero Reveal
-        gsap.from(".hero-reveal > *", {
-            y: 50, opacity: 0, duration: 1.2, stagger: 0.15, ease: "power4.out"
-        });
-
-        // Mockup Fluid Parallax
-        gsap.from(".mockup-anim", {
-            scrollTrigger: { trigger: "#mockup-trigger", start: "top 90%", scrub: 1 },
-            y: 100, scale: 0.9, opacity: 0, duration: 2, ease: "expo.out"
-        });
-
-        // Section Reveals
-        gsap.utils.toArray('.reveal-up').forEach(el => {
-            gsap.from(el, {
-                scrollTrigger: { trigger: el, start: "top 85%" },
-                y: 60, opacity: 0, duration: 1.5, ease: "expo.out"
-            });
-        });
-
-        // Ecosystem Stagger
-        gsap.from(".eco-box", {
-            scrollTrigger: { trigger: "#ecossistema", start: "top 75%" },
-            scale: 0.8, opacity: 0, stagger: 0.1, duration: 1, ease: "back.out(1.7)"
-        });
-
-        // Creators Stagger
-        gsap.from(".creator-reveal", {
-            scrollTrigger: { trigger: "#criadores", start: "top 80%" },
-            y: 40, opacity: 0, stagger: 0.1, duration: 1.2, ease: "power3.out"
-        });
-
+        gsap.from(".hero-reveal > *", { y: 50, opacity: 0, duration: 1.2, stagger: 0.15, ease: "power4.out" });
+        gsap.to("#marquee-section", { opacity: 1, duration: 1, delay: 1 });
+        gsap.from(".mockup-anim", { scrollTrigger: { trigger: "#mockup-trigger", start: "top 90%", scrub: 1 }, y: 100, scale: 0.9, opacity: 0, duration: 2, ease: "expo.out" });
+        gsap.utils.toArray('.reveal-up').forEach(el => { gsap.from(el, { scrollTrigger: { trigger: el, start: "top 85%" }, y: 60, opacity: 0, duration: 1.5, ease: "expo.out" }); });
+        gsap.from(".eco-box", { scrollTrigger: { trigger: "#ecossistema", start: "top 75%" }, scale: 0.8, opacity: 0, stagger: 0.1, duration: 1, ease: "back.out(1.7)" });
+        gsap.from(".creator-reveal", { scrollTrigger: { trigger: "#criadores", start: "top 80%" }, y: 40, opacity: 0, stagger: 0.1, duration: 1.2, ease: "power3.out" });
     </script>
 </body>
 </html>
