@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Funcionalidades | Agendei</title>
+  
+  <link rel="stylesheet" href="../css/styles.css">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/feather-icons"></script>
+</head>
+<body class="accelerate">
+  <div class="hero-gradient fixed inset-0 pointer-events-none"></div>
+
+  <!-- Navigation -->
+  <nav id="main-nav">
+    <div class="logo-container">
+      <div class="logo-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3">
+          <circle cx="6" cy="6" r="3"/>
+          <circle cx="6" cy="18" r="3"/>
+          <line x1="20" y1="4" x2="8.12" y2="15.88"/>
+          <line x1="14.47" y1="12.59" x2="20" y2="18"/>
+          <line x1="8.12" y1="8.12" x2="12" y2="12"/>
+        </svg>
+      </div>
+      <div class="logo-text">AGENDEI<span class="logo-dot">.</span></div>
+    </div>
+
+    <div class="nav-menu">
+      <a href="../index.html" data-i18n="nav_platform">Plataforma</a>
+      <a href="funcionalidades.html" data-i18n="nav_features">Funcionalidades</a>
+      <a href="precos.html" data-i18n="nav_pricing">Preços</a>
+      <a href="sobre.html" data-i18n="nav_about">Sobre</a>
+    </div>
+
+    <div class="nav-right">
+      <div class="theme-switcher">
+        <button class="theme-btn active" data-theme="dark"><i data-feather="moon" style="width: 20px; height: 20px;"></i></button>
+        <button class="theme-btn" data-theme="light"><i data-feather="sun" style="width: 20px; height: 20px;"></i></button>
+      </div>
+      <a href="https://agendei-alpha.vercel.app" class="nav-btn" data-i18n="nav_enter">Entrar</a>
+    </div>
+
+    <button class="mobile-menu-btn">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" style="padding-top: 8rem; min-height: 60vh;">
+    <div class="hero-content hero-reveal">
+      <h1 data-i18n="feat_title">Funcionalidades Poderosas</h1>
+      <p data-i18n="feat_desc">Descubra todas as ferramentas que sua barbearia precisa para prosperar</p>
+    </div>
+  </section>
+
+  <!-- Features Detailed Section -->
+  <section class="container">
+    <div class="features-grid" style="margin-top: 0; gap: 3rem;">
+      <!-- Agenda Dinâmica -->
+      <div class="reveal-item" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-bottom: 2rem;">
+        <div>
+          <h2 style="font-size: 2rem; margin-bottom: 1rem;"><i data-feather="calendar" style="width: 32px; height: 32px; display: inline-block; margin-right: 0.5rem; vertical-align: middle;"></i> Agenda Dinâmica</h2>
+          <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;">
+            Gerencie todos os seus compromissos em um único lugar. Veja conflitos de horário em tempo real e otimize o uso do seu tempo.
+          </p>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;"><i data-feather="check" style="width: 18px; height: 18px; color: var(--primary); margin-right: 0.5rem; display: inline-block;"></i> Sincronização em tempo real</li>
+            <li style="margin-bottom: 0.5rem;"><i data-feather="check" style="width: 18px; height: 18px; color: var(--primary); margin-right: 0.5rem; display: inline-block;"></i> Detecção automática de conflitos</li>
+            <li style="margin-bottom: 0.5rem;"><i data-feather="check" style="width: 18px; height: 18px; color: var(--primary); margin-right: 0.5rem; display: inline-block;"></i> Notificações por SMS e email</li>
+            <li style="margin-bottom: 0.5rem;"><i data-feather="check" style="width: 18px; height: 18px; color: var(--primary); margin-right: 0.5rem; display: inline-block;"></i> Integração com calendário</li>
+          </ul>
+        </div>
+        <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; aspect-ratio: 1;">
+          <img src="https://via.placeholder.com/400x400?text=Agenda" alt="Agenda" style="width: 100%; border-radius: 0.5rem;">
+        </div>
+      </div>
+
+      <!-- Gestão Financeira -->
+      <div class="reveal-item" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-bottom: 2rem;">
+        <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; aspect-ratio: 1; order: 2;">
+          <img src="https://via.placeholder.com/400x400?text=Financeiro" alt="Financeiro" style="width: 100%; border-radius: 0.5rem;">
+        </div>
+        <div style="order: 1;">
+          <h2 style="font-size: 2rem; margin-bottom: 1rem;"><i data-feather="bar-chart-2" style="width: 32px; height: 32px; display: inline-block; margin-right: 0.5rem; vertical-align: middle;"></i> Gestão Financeira</h2>
+          <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;">
+            Controle total sobre suas finanças. Acompanhe ganhos, despesas e metas com dashboards visuais e relatórios detalhados.
+          </p>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;"><i data-feather="check" style="width: 18px; height: 18px; color: var(--primary); margin-right: 0.5rem; display: inline-block;"></i> Controle de caixa detalhado</li>
+            <li style="margin-bottom: 0.5rem;"><i data-feather="check" style="width: 18px; height: 18px; color: var(--primary); margin-right: 0.5rem; display: inline-block;"></i> Metas e KPIs</li>
+            <li style="margin-bottom: 0.5rem;"><i data-feather="check" style="width: 18px; height: 18px; color: var(--primary); margin-right: 0.5rem; display: inline-block;"></i> Relatórios em tempo real</li>
+            <li style="margin-bottom: 0.5rem;"><i data-feather="check" style="width: 18px; height: 18px; color: var(--primary); margin-right: 0.5rem; display: inline-block;"></i> Histórico de transações</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CRM de Clientes -->
+      <div class="reveal-item" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; margin-bottom: 2rem;">
+        <div>
+          <h2 style="font-size: 2rem; margin-bottom: 1rem;"><i data-feather="users" style="width: 32px; height: 32px; display: inline-block; margin-right: 0.5rem; vertical-align: middle;"></i> CRM de Clientes</h2>
+          <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 1rem;">
+            Construa relacionamentos duradouros. Mantenha informações completas de cada cliente com histórico de serviços.
+          </p>
+          <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 0.5rem;"><i data-feather="check" style="width: 18px; height: 18px; color: var(--primary); margin-right: 0.5rem; display: inline-block;"></i> Perfil completo do cliente</li>
+            <li style="margin-bottom: 0.5rem;"><i data-feather="check" style="width: 18px; height: 18px; color: var(--primary); margin-right: 0.5rem; display: inline-block;"></i> Histórico de serviços</li>
+            <li style="margin-bottom: 0.5rem;"><i data-feather="check" style="width: 18px; height: 18px; color: var(--primary); margin-right: 0.5rem; display: inline-block;"></i> Preferências personalizadas</li>
+            <li style="margin-bottom: 0.5rem;"><i data-feather="check" style="width: 18px; height: 18px; color: var(--primary); margin-right: 0.5rem; display: inline-block;"></i> Campanhas de fidelização</li>
+          </ul>
+        </div>
+        <div style="background: var(--surface); padding: 2rem; border-radius: 1rem; aspect-ratio: 1;">
+          <img src="https://via.placeholder.com/400x400?text=Clientes" alt="Clientes" style="width: 100%; border-radius: 0.5rem;">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Additional Features Grid -->
+  <section class="container" style="margin-top: 5rem;">
+    <div class="section-header reveal-item" style="margin-bottom: 3rem;">
+      <h2>Mais Funcionalidades</h2>
+    </div>
+
+    <div class="features-grid">
+      <div class="feature-card glass reveal-item">
+        <div class="feature-icon feature-icon-bell"><i data-feather="bell" style="width: 32px; height: 32px;"></i></div>
+        <h3>Notificações Inteligentes</h3>
+        <p>Receba alertas automáticos para clientes que não confirmaram, aniversários e muito mais.</p>
+      </div>
+      <div class="feature-card glass reveal-item">
+        <div class="feature-icon feature-icon-report"><i data-feather="trending-up" style="width: 32px; height: 32px;"></i></div>
+        <h3>Relatórios Avançados</h3>
+        <p>Análise completa do seu negócio com gráficos, métricas e insights acionáveis.</p>
+      </div>
+      <div class="feature-card glass reveal-item">
+        <div class="feature-icon feature-icon-mobile"><i data-feather="smartphone" style="width: 32px; height: 32px;"></i></div>
+        <h3>App Mobile</h3>
+        <p>Gerencie sua barbearia de qualquer lugar, a qualquer hora com nosso aplicativo.</p>
+      </div>
+      <div class="feature-card glass reveal-item">
+        <div class="feature-icon" style="background: rgba(249, 115, 22, 0.1); color: #f97316;"><i data-feather="lock" style="width: 32px; height: 32px;"></i></div>
+        <h3>Segurança Premium</h3>
+        <p>Dados criptografados e backup automático para proteger suas informações.</p>
+      </div>
+      <div class="feature-card glass reveal-item">
+        <div class="feature-icon" style="background: rgba(34, 197, 94, 0.1); color: #22c55e;"><i data-feather="settings" style="width: 32px; height: 32px;"></i></div>
+        <h3>Integrações</h3>
+        <p>Conecte com suas ferramentas favoritas e crie um ecossistema perfeito.</p>
+      </div>
+      <div class="feature-card glass reveal-item">
+        <div class="feature-icon" style="background: rgba(168, 85, 247, 0.1); color: #a855f7;"><i data-feather="headphones" style="width: 32px; height: 32px;"></i></div>
+        <h3>Suporte 24/7</h3>
+        <p>Equipe dedicada pronta para ajudar você e seu negócio a crescer sempre.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="container" style="text-align: center; padding: 5rem 1.5rem;">
+    <div class="section-header reveal-item">
+      <h2>Transforme sua Barbearia Hoje</h2>
+      <p>Comece gratuitamente, sem necessidade de cartão de crédito</p>
+      <div class="cta-buttons" style="margin-top: 2rem;">
+        <a href="https://agendei-alpha.vercel.app" class="btn btn-primary">Acessar Agora</a>
+        <a href="precos.html" class="btn btn-secondary">Ver Planos</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p data-i18n="footer_rights">© 2026 Agendei. Todos os direitos reservados.</p>
+  </footer>
+
+  <script src="../js/main.js"></script>
+</body>
+</html>

@@ -1,42 +1,92 @@
-# 💈 Agendei. Landing Page — Showcase 2026
+# 💈 Agendei - Landing Page Profissional para Barbearias
 
-Bem-vindo ao repositório oficial da Landing Page do **Agendei.**, a plataforma definitiva para gestão inteligente de barbearias e salões de beleza.
+Um site moderno, responsivo e elegante para apresentar a plataforma Agendei de gestão para barbearias. Desenvolvido com foco em performance, acessibilidade e experiência do usuário.
 
-![Mockup Preview](mockup-laptop-real.png)
+## 🎨 Features
 
-## 🚀 O Projeto
+✅ **Tema Claro e Escuro** - Troca dinâmica com transições suaves
+✅ **Responsivo** - Funciona perfeitamente em desktop, tablet e mobile
+✅ **Múltiplas Páginas** - Estrutura completa com navegação intuitiva
+✅ **Internacionalização** - Suporte para PT-BR, EN e ES
+✅ **Animações Elegantes** - Scroll suave e efeitos visuais com GSAP
+✅ **Sem Framework Pesado** - HTML, CSS e JavaScript puro para máxima performance
+✅ **Acessibilidade** - Semântica HTML correta e contraste adequado
 
-Este repositório contém o código-fonte do site institucional/vitrine do Agendei. O objetivo desta página é apresentar os recursos premium da plataforma, suas integrações e a visão tecnológica por trás do produto.
+## 📁 Estrutura do Projeto
 
-### ✨ Funcionalidades em Destaque
-- **Interface de Elite**: Design totalmente focado em Dark Mode com a paleta oficial `#fd9602` (Laranja Agendei).
-- **Animações Cinematográficas**: Experiência de scroll imersiva construída com **GSAP (GreenSock)**.
-- **Responsividade Total**: Mockups adaptados para Desktop e Mobile.
-- **Ecossistema de Integrações**: Vitrine técnica mostrando a stack (Supabase, Firebase, Google, WhatsApp).
+```
+agendei-landing/
+├── index.html              # Página inicial
+├── css/
+│   └── styles.css         # Estilos globais (tema claro/escuro)
+├── js/
+│   └── main.js            # Scripts principais
+├── pages/
+│   ├── funcionalidades.html  # Página de funcionalidades
+│   ├── precos.html          # Página de preços
+│   └── sobre.html           # Página sobre
+├── assets/                # Imagens e recursos
+└── README.md             # Este arquivo
+```
 
-## 🛠️ Tecnologias Utilizadas
+## 🚀 Como Usar
 
-A stack foi escolhida para garantir performance máxima e carregamento instantâneo:
+### 1. **Instalação**
 
-- **HTML5 & CSS3** (Custom Properties)
-- **Tailwind CSS** (Estilização Utilitária de alta velocidade)
-- **GSAP (GreenSock)** (Animações de ScrollTrigger e Parallax)
-- **Lucide Icons** (Ícones vetoriais modernos)
-- **Google Fonts** (Plus Jakarta Sans)
+Não há dependências complexas! Apenas clone/baixe o projeto e abra `index.html` em seu navegador.
 
-## 🌐 Acesso ao Produto
+```bash
+cd agendei-landing
+# Abra index.html com um servidor local (recomendado)
+python -m http.server 8000
+```
 
-Você pode acessar a versão Alpha funcional do dashboard através do link abaixo:
-👉 [https://agendei-alpha.vercel.app](https://agendei-alpha.vercel.app)
+### 2. **Navegação**
+
+- **Home** (`index.html`) - Apresentação principal
+- **Funcionalidades** (`pages/funcionalidades.html`) - Detalhes das features
+- **Preços** (`pages/precos.html`) - Planos e tabela comparativa
+- **Sobre** (`pages/sobre.html`) - História, equipe e missão
+
+## 🎨 Sistema de Temas
+
+O sistema de temas usa variáveis CSS e muda automaticamente ao clicar nos botões de tema.
+
+```javascript
+// Tema escuro
+document.documentElement.setAttribute('data-theme', 'dark');
+
+// Tema claro
+document.documentElement.setAttribute('data-theme', 'light');
+```
+
+## 🌐 Internacionalização
+
+Suporta 3 idiomas: PT-BR, EN e ES com sistema i18n integrado.
+
+## ✨ Recursos Técnicos
+
+- **GSAP** - Animações suaves
+- **ScrollTrigger** - Trigger de animações ao scroll
+- **Lenis** - Smooth scrolling moderno
+- **CSS Moderno** - Variáveis CSS, Grid, Flexbox
+- **JavaScript Modular** - Classes e padrões limpos
+
+## 📱 Responsividade
+
+Breakpoints: 640px, 768px, 1024px, 1280px
+
+## 🚀 Deploy
+
+- **Vercel** (recomendado)
+- **GitHub Pages**
+- **Netlify**
+- Qualquer hosting estático
+
+## 📝 Licença
+
+© 2026 Agendei. Todos os direitos reservados.
 
 ---
 
-## 👨‍💻 Desenvolvedores & Criadores
-
-- **Matheus Lucindo** — Visionário e Desenvolvedor Principal do Ecossistema Agendei.
-
----
-
-## 📄 Licença
-
-Este projeto é de uso exclusivo da organização **Agendei.-Barbearia-e-Salao-de-Beleza**. Todos os direitos reservados 2026.
+**Desenvolvido com ❤️ para barbearias que buscam excelência**

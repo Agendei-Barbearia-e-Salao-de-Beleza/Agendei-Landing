@@ -1,244 +1,1021 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Agendei. | Sistema para Cabeleireiros e Barbearias</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <style>
-        :root { --primary: #fd9602; --bg: #09090b; }
-        body { background-color: var(--bg); color: #fff; font-family: 'Outfit', sans-serif; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
-        .text-primary { color: var(--primary); }
-        .bg-primary { background-color: var(--primary); }
-        .glass { background: rgba(255,255,255,0.02); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); }
-        .hero-gradient { background: radial-gradient(circle at 50% 50%, rgba(253, 150, 2, 0.08) 0%, transparent 70%); }
-        .lang-btn.active { background: var(--primary); color: #000; }
-        .accelerate { will-change: transform, opacity; }
-        
-        /* Tech Grid Styles */
-        .tech-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
-        @media (min-width: 768px) { .tech-grid { grid-template-columns: repeat(5, 1fr); } }
-        .tech-item { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; opacity: 0.4; transition: all 0.4s ease; cursor: default; }
-        .tech-item:hover { opacity: 1; transform: translateY(-5px); color: var(--primary); }
-        .tech-item svg { fill: currentColor; width: 32px; height: 32px; }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agendei. | Sistema para Cabeleireiros e Barbearias</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <style>
+    /* ── TOKENS ── */
+    :root {
+      --orange: #fd9602;
+      --orange-dim: rgba(253,150,2,0.12);
+      --orange-glow: rgba(253,150,2,0.25);
+      --bg: #07070a;
+      --surface: rgba(255,255,255,0.03);
+      --surface-hover: rgba(255,255,255,0.06);
+      --border: rgba(255,255,255,0.06);
+      --border-hover: rgba(253,150,2,0.35);
+      --text: #f4f4f5;
+      --muted: #71717a;
+      --radius-card: 2.5rem;
+      --radius-pill: 9999px;
+      --transition: 0.35s cubic-bezier(.4,0,.2,1);
+    }
+    [data-theme="light"] {
+      --bg: #fafaf9;
+      --surface: rgba(0,0,0,0.03);
+      --surface-hover: rgba(0,0,0,0.06);
+      --border: rgba(0,0,0,0.07);
+      --border-hover: rgba(253,150,2,0.4);
+      --text: #18181b;
+      --muted: #71717a;
+    }
 
-        section { padding: 120px 0; }
-        html.lenis { height: auto; }
-        .lenis.lenis-smooth { scroll-behavior: auto !important; }
-    </style>
+    /* ── RESET ── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      transition: background var(--transition), color var(--transition);
+    }
+    a { text-decoration: none; color: inherit; }
+    img { display: block; max-width: 100%; }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--orange); border-radius: 3px; }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.025;
+      pointer-events: none;
+      z-index: 0;
+    }
+    [data-theme="light"] body::before { opacity: 0.015; }
+
+    /* ── HERO GRADIENT ── */
+    .hero-glow {
+      position: fixed; top: -30vh; left: 50%;
+      transform: translateX(-50%);
+      width: 80vw; height: 80vh;
+      background: radial-gradient(ellipse at center, var(--orange-glow) 0%, transparent 65%);
+      pointer-events: none; z-index: 0;
+      transition: opacity var(--transition);
+    }
+    [data-theme="light"] .hero-glow { opacity: 0.4; }
+
+    /* ── UTILITY ── */
+    .container { max-width: 76rem; margin: 0 auto; padding: 0 2rem; }
+    .text-orange { color: var(--orange); }
+    .tag {
+      display: inline-flex; align-items: center; gap: .4rem;
+      padding: .35rem 1rem;
+      background: var(--orange-dim);
+      border: 1px solid rgba(253,150,2,.2);
+      border-radius: var(--radius-pill);
+      font-size: .65rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .15em;
+      color: var(--orange);
+    }
+    .glass {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      transition: border-color var(--transition), background var(--transition);
+    }
+    .glass:hover { border-color: var(--border-hover); background: var(--surface-hover); }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: .9rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(7,7,10,.7);
+      backdrop-filter: blur(24px);
+      transition: all var(--transition);
+    }
+    [data-theme="light"] nav { background: rgba(250,250,249,.75); }
+    nav.scrolled { box-shadow: 0 4px 40px rgba(0,0,0,.25); }
+
+    .nav-logo { display: flex; align-items: center; gap: .75rem; }
+    .nav-logo-icon {
+      width: 2.4rem; height: 2.4rem;
+      background: var(--orange);
+      border-radius: .75rem;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 0 24px var(--orange-glow);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .nav-logo-icon:hover { transform: scale(1.08) rotate(-4deg); box-shadow: 0 0 36px var(--orange-glow); }
+    .nav-logo-text { font-size: 1.15rem; font-weight: 900; letter-spacing: -.03em; text-transform: uppercase; }
+    .nav-logo-text span { color: var(--orange); }
+
+    .nav-links {
+      display: none;
+      gap: 2.5rem;
+      font-size: .6rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .18em;
+      color: var(--muted);
+    }
+    @media(min-width:1024px){ .nav-links { display: flex; } }
+    .nav-links a { transition: color var(--transition); position: relative; padding-bottom: .3rem; }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:0; left:0; width:0; height:1.5px;
+      background:var(--orange); transition: width var(--transition);
+    }
+    .nav-links a:hover { color: var(--orange); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-right { display: flex; align-items: center; gap: 1rem; }
+
+    .lang-switcher {
+      display: flex;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      padding: .2rem;
+      gap: .15rem;
+    }
+    .lang-btn {
+      padding: .35rem .75rem;
+      border-radius: var(--radius-pill);
+      font-size: .6rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .08em;
+      border: none; background: transparent; color: var(--muted);
+      cursor: pointer; transition: all var(--transition);
+    }
+    .lang-btn.active { background: var(--orange); color: #000; }
+
+    .theme-toggle {
+      width: 2.2rem; height: 2.2rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; font-size: 1rem;
+      transition: all var(--transition);
+    }
+    .theme-toggle:hover { border-color: var(--orange); background: var(--orange-dim); }
+
+    .btn-enter {
+      background: var(--text); color: var(--bg);
+      padding: .6rem 1.5rem;
+      border-radius: var(--radius-pill);
+      font-size: .6rem; font-weight: 900;
+      text-transform: uppercase; letter-spacing: .12em;
+      border: none; cursor: pointer;
+      transition: all var(--transition);
+      white-space: nowrap;
+    }
+    .btn-enter:hover { background: var(--orange); color: #000; transform: translateY(-1px); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100svh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 8rem 2rem 4rem;
+      text-align: center;
+      position: relative; z-index: 1;
+    }
+    .hero-eyebrow { margin-bottom: 1.5rem; }
+    .hero h1 {
+      font-size: clamp(2.8rem, 9vw, 7rem);
+      font-weight: 900;
+      letter-spacing: -.04em;
+      line-height: .93;
+      margin-bottom: 1.5rem;
+    }
+    .hero-desc {
+      max-width: 36rem;
+      font-size: clamp(1rem, 1.8vw, 1.15rem);
+      color: var(--muted);
+      font-weight: 500;
+      line-height: 1.65;
+      margin-bottom: 2.5rem;
+    }
+    .hero-cta { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--orange); color: #000;
+      padding: .9rem 2.2rem;
+      border-radius: var(--radius-pill);
+      font-size: .8rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .1em;
+      border: none; cursor: pointer;
+      transition: all var(--transition);
+      box-shadow: 0 0 24px var(--orange-glow);
+    }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 32px var(--orange-glow); }
+    .btn-ghost {
+      background: transparent; color: var(--text);
+      padding: .9rem 2.2rem;
+      border-radius: var(--radius-pill);
+      font-size: .8rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      border: 1.5px solid var(--border); cursor: pointer;
+      transition: all var(--transition);
+    }
+    .btn-ghost:hover { border-color: var(--orange); color: var(--orange); transform: translateY(-2px); }
+
+    /* stats row */
+    .hero-stats {
+      display: flex; gap: 2.5rem; justify-content: center; flex-wrap: wrap;
+      margin-top: 3.5rem;
+      padding-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .stat { text-align: center; }
+    .stat-num { font-size: 2rem; font-weight: 900; letter-spacing: -.03em; color: var(--orange); }
+    .stat-label { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .15em; color: var(--muted); margin-top: .2rem; }
+
+    /* mockup */
+    .hero-mockup {
+      width: 100%; max-width: 72rem;
+      margin: 4rem auto 0;
+      padding: 0 2rem;
+      position: relative; z-index: 1;
+    }
+    .mockup-frame {
+      border-radius: 1.8rem;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 80px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.04);
+      transition: box-shadow var(--transition);
+      position: relative;
+    }
+    .mockup-frame::before {
+      content:'';
+      position:absolute; top:0; left:0; right:0; height:2px;
+      background: linear-gradient(90deg, transparent, var(--orange), transparent);
+      opacity: .6;
+    }
+    .mockup-frame img { width: 100%; height: auto; display: block; border-radius: inherit; }
+    .mockup-frame:hover { box-shadow: 0 32px 100px rgba(0,0,0,.6), 0 0 60px var(--orange-glow); }
+    
+    .mockup-image { width: 100%; height: auto; display: block; }
+
+    /* mockup placeholder if no img */
+    .mockup-placeholder {
+      width: 100%; aspect-ratio: 16/9;
+      background: linear-gradient(135deg, #111114 0%, #16161c 50%, #111114 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .mockup-placeholder::before {
+      content:''; position:absolute; inset:0;
+      background:
+        repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,.02) 40px),
+        repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,.02) 40px);
+    }
+    .mockup-inner { position: relative; z-index: 1; text-align: center; }
+    .mockup-inner p { font-size: .7rem; color: var(--muted); margin-top: .5rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; }
+
+    /* tech pills */
+    .tech-row {
+      display: flex; flex-wrap: wrap; justify-content: center;
+      gap: .75rem; margin-top: 4rem;
+      opacity: 0; animation: fadeUp .8s .6s forwards;
+    }
+    .tech-pill {
+      display: flex; align-items: center; gap: .5rem;
+      padding: .5rem 1.1rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-pill);
+      font-size: .65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: var(--muted);
+      transition: all var(--transition);
+    }
+    .tech-pill:hover { border-color: var(--border-hover); color: var(--text); background: var(--surface-hover); transform: translateY(-2px); }
+    .tech-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ── SECTION COMMON ── */
+    section { padding: 8rem 0; position: relative; z-index: 1; }
+    .section-label {
+      font-size: .6rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: .25em;
+      color: var(--orange); margin-bottom: .75rem;
+    }
+    .section-title {
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 900; letter-spacing: -.03em;
+      line-height: 1.1;
+    }
+    .section-desc {
+      color: var(--muted); font-size: 1.05rem; font-weight: 500;
+      line-height: 1.65; max-width: 38rem;
+    }
+    .section-head { margin-bottom: 4rem; }
+    .section-head.center { text-align: center; }
+    .section-head.center .section-desc { margin: 0 auto; }
+
+    /* ── FEATURES ── */
+    .features { background: transparent; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+    @media(min-width:640px){ .features-grid { grid-template-columns: repeat(2,1fr); } }
+    @media(min-width:1024px){ .features-grid { grid-template-columns: repeat(3,1fr); } }
+
+    .feat-card {
+      padding: 2.5rem;
+      border-radius: var(--radius-card);
+      display: flex; flex-direction: column; gap: 1.5rem;
+      transition: transform var(--transition), border-color var(--transition), box-shadow var(--transition);
+      cursor: default;
+    }
+    .feat-card:hover { transform: translateY(-6px); box-shadow: 0 16px 50px rgba(0,0,0,.25); }
+    .feat-card.featured { border-color: rgba(253,150,2,.2); }
+    .feat-card.featured:hover { border-color: rgba(253,150,2,.4); box-shadow: 0 16px 50px var(--orange-glow); }
+
+    .feat-icon {
+      width: 3rem; height: 3rem;
+      border-radius: .9rem;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .feat-card h3 { font-size: 1.2rem; font-weight: 800; letter-spacing: -.01em; }
+    .feat-card p { color: var(--muted); font-size: .9rem; font-weight: 500; line-height: 1.65; flex:1; }
+    .feat-tag {
+      align-self: flex-start;
+      font-size: .55rem; font-weight: 800; text-transform: uppercase; letter-spacing: .12em;
+      padding: .25rem .7rem; border-radius: var(--radius-pill);
+      background: var(--orange-dim); color: var(--orange);
+      border: 1px solid rgba(253,150,2,.15);
+    }
+
+    /* ── STACK ── */
+    .stack { background: rgba(255,255,255,.01); }
+    [data-theme="light"] .stack { background: rgba(0,0,0,.015); }
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    @media(min-width:480px){ .stack-grid { grid-template-columns: repeat(3,1fr); } }
+    @media(min-width:768px){ .stack-grid { grid-template-columns: repeat(5,1fr); } }
+
+    .stack-item {
+      padding: 2rem 1rem;
+      border-radius: 1.5rem;
+      display: flex; flex-direction: column;
+      align-items: center; gap: .75rem;
+      transition: all var(--transition);
+      cursor: default;
+    }
+    .stack-item:hover { transform: translateY(-6px); border-color: var(--border-hover); background: var(--surface-hover); }
+    .stack-item svg { width: 2.2rem; height: 2.2rem; transition: transform var(--transition); }
+    .stack-item:hover svg { transform: scale(1.15); }
+    .stack-item span { font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); transition: color var(--transition); }
+    .stack-item:hover span { color: var(--text); }
+
+    /* ── WORKFLOW ── */
+    .workflow-steps {
+      display: grid; gap: 1.25rem;
+      grid-template-columns: 1fr;
+    }
+    @media(min-width:768px){ .workflow-steps { grid-template-columns: repeat(3,1fr); } }
+    .step-card { padding: 2.5rem; border-radius: var(--radius-card); position: relative; overflow: hidden; }
+    .step-number {
+      position: absolute; top: 1.5rem; right: 1.75rem;
+      font-size: 5rem; font-weight: 900; letter-spacing: -.05em;
+      color: var(--orange); opacity: .08; line-height: 1;
+      pointer-events: none; user-select: none;
+    }
+    .step-card h3 { font-size: 1.2rem; font-weight: 800; margin: 1.25rem 0 .75rem; }
+    .step-card p { color: var(--muted); font-size: .9rem; line-height: 1.65; font-weight: 500; }
+    .step-icon {
+      width: 3rem; height: 3rem; border-radius: .85rem;
+      display: flex; align-items: center; justify-content: center;
+      background: var(--orange-dim); color: var(--orange);
+    }
+
+    /* ── TEAM ── */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+      gap: 1.5rem;
+    }
+    .team-card {
+      padding: 2.5rem 2rem;
+      border-radius: var(--radius-card);
+      display: flex; flex-direction: column;
+      align-items: center; text-align: center; gap: 1.5rem;
+      transition: transform var(--transition), border-color var(--transition);
+    }
+    .team-card:hover { transform: translateY(-6px); border-color: var(--border-hover); }
+    .team-avatar {
+      width: 6rem; height: 6rem;
+      border-radius: 1.5rem;
+      overflow: hidden;
+      border: 2px solid var(--border);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .team-card:hover .team-avatar { border-color: var(--orange); box-shadow: 0 0 20px var(--orange-glow); }
+    .team-avatar img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%); transition: filter .6s ease; }
+    .team-card:hover .team-avatar img { filter: grayscale(0); }
+    .team-name { font-size: 1.1rem; font-weight: 800; letter-spacing: -.01em; }
+    .team-role { font-size: .6rem; font-weight: 800; text-transform: uppercase; letter-spacing: .15em; color: var(--orange); margin-top: .2rem; }
+
+    /* ── FAQ ── */
+    .faq-list { display: flex; flex-direction: column; gap: .75rem; max-width: 52rem; margin: 0 auto; }
+    .faq-item {
+      border-radius: 1.5rem;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      transition: border-color var(--transition);
+    }
+    .faq-item.open { border-color: rgba(253,150,2,.25); }
+    .faq-q {
+      width: 100%; text-align: left;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 1.5rem 1.75rem;
+      background: var(--surface); border: none; cursor: pointer;
+      font-size: 1rem; font-weight: 700; color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      transition: background var(--transition);
+    }
+    .faq-q:hover { background: var(--surface-hover); }
+    .faq-chevron {
+      flex-shrink: 0; width: 1.4rem; height: 1.4rem;
+      border-radius: 50%; background: var(--orange-dim); border: 1px solid rgba(253,150,2,.2);
+      display: flex; align-items: center; justify-content: center;
+      transition: transform var(--transition), background var(--transition);
+    }
+    .faq-item.open .faq-chevron { transform: rotate(180deg); background: var(--orange-dim); }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      font-size: .9rem; color: var(--muted); font-weight: 500; line-height: 1.7;
+      transition: max-height .35s cubic-bezier(.4,0,.2,1), padding .35s;
+      padding: 0 1.75rem;
+    }
+    .faq-item.open .faq-a { max-height: 300px; padding: 1rem 1.75rem 1.5rem; }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      border-radius: 2.5rem;
+      padding: 5rem 3rem;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(253,150,2,.08) 0%, rgba(253,150,2,.04) 100%);
+      border: 1px solid rgba(253,150,2,.15);
+      position: relative; overflow: hidden;
+    }
+    .cta-banner::before {
+      content:''; position:absolute; top:-50%; left:50%;
+      transform: translateX(-50%);
+      width: 60%; height: 80%;
+      background: radial-gradient(ellipse, rgba(253,150,2,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-banner h2 { font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 900; letter-spacing: -.03em; margin-bottom: 1rem; }
+    .cta-banner p { color: var(--muted); font-size: 1.05rem; font-weight: 500; max-width: 34rem; margin: 0 auto 2.5rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-logo { display: flex; align-items: center; gap: .6rem; }
+    .footer-copy { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .15em; color: var(--muted); }
+    .footer-links { display: flex; gap: 2rem; }
+    .footer-links a { font-size: .65rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); transition: color var(--transition); }
+    .footer-links a:hover { color: var(--orange); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(.93); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .anim-up { opacity: 0; }
+    .anim-up.visible { animation: fadeUp .75s ease forwards; }
+
+    /* stagger delays */
+    .d1 { animation-delay: .05s; }
+    .d2 { animation-delay: .15s; }
+    .d3 { animation-delay: .25s; }
+    .d4 { animation-delay: .35s; }
+    .d5 { animation-delay: .45s; }
+    .d6 { animation-delay: .55s; }
+
+    /* hero intro */
+    .hero-eyebrow  { opacity:0; animation: fadeUp .7s .1s forwards; }
+    .hero h1       { opacity:0; animation: fadeUp .7s .2s forwards; }
+    .hero-desc     { opacity:0; animation: fadeUp .7s .3s forwards; }
+    .hero-cta      { opacity:0; animation: fadeUp .7s .4s forwards; }
+    .hero-stats    { opacity:0; animation: fadeUp .7s .55s forwards; }
+    .hero-mockup   { opacity:0; animation: scaleIn .9s .5s forwards; }
+  </style>
 </head>
-<body class="accelerate">
-    <div class="hero-gradient fixed inset-0 pointer-events-none"></div>
+<body>
 
-    <!-- Navigation -->
-    <nav class="fixed w-full z-[100] px-8 py-4 flex justify-between items-center glass border-b border-white/5" id="main-nav">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-[0_0_20px_rgba(253,150,2,0.3)]">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><line x1="20" y1="4" x2="8.12" y2="15.88"/><line x1="14.47" y1="12.59" x2="20" y2="18"/><line x1="8.12" y1="8.12" x2="12" y2="12"/></svg>
-            </div>
-            <span class="text-xl font-extrabold tracking-tighter uppercase">AGENDEI<span class="text-primary">.</span></span>
+<div class="hero-glow"></div>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.8">
+        <circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/>
+        <line x1="20" y1="4" x2="8.5" y2="15.5"/><line x1="14.5" y1="12.5" x2="20" y2="18"/>
+        <line x1="8.5" y1="8.5" x2="12.5" y2="12.5"/>
+      </svg>
+    </div>
+    <span class="nav-logo-text">AGENDEI<span>.</span></span>
+  </div>
+
+  <div class="nav-links">
+    <a href="#" data-i18n="nav_platform">Plataforma</a>
+    <a href="#features" data-i18n="nav_features">Funcionalidades</a>
+    <a href="#pricing" data-i18n="nav_pricing">Preços</a>
+    <a href="#team" data-i18n="nav_team">Sobre</a>
+    <a href="#faq" data-i18n="nav_faq">FAQ</a>
+  </div>
+
+  <div class="nav-right">
+    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+    <div class="lang-switcher">
+      <button class="lang-btn active" data-lang="pt">PT</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+      <button class="lang-btn" data-lang="es">ES</button>
+    </div>
+    <a href="https://agendei-alpha.vercel.app" class="btn-enter" data-i18n="nav_enter">Entrar</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-eyebrow"><span class="tag">✦ Hairdresser &amp; Barbershop v1.0</span></div>
+  <h1 data-i18n="hero_title_1">GERENCIE COM <br><span class="text-orange">PRECISÃO.</span></h1>
+  <p class="hero-desc" data-i18n="hero_desc">A plataforma definitiva para cabeleireiros e barbearias que buscam excelência operacional e faturamento inteligente.</p>
+  <div class="hero-cta">
+    <a href="https://agendei-alpha.vercel.app" class="btn-primary" data-i18n="btn_start">Começar Grátis</a>
+    <a href="#features" class="btn-ghost" data-i18n="btn_learn">Ver Funcionalidades</a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-label" data-i18n="stat_appt">Agendamentos</div></div>
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label" data-i18n="stat_lang">Idiomas</div></div>
+    <div class="stat"><div class="stat-num">Alpha</div><div class="stat-label" data-i18n="stat_version">Versão Atual</div></div>
+    <div class="stat"><div class="stat-num">100%</div><div class="stat-label" data-i18n="stat_free">Gratuito</div></div>
+  </div>
+</section>
+
+<!-- TECH PILLS -->
+<div style="position:relative;z-index:1;padding:0 2rem;">
+  <div class="tech-row">
+    <div class="tech-pill"><div class="tech-dot" style="background:#7F52FF"></div>Kotlin</div>
+    <div class="tech-pill"><div class="tech-dot" style="background:#4285F4"></div>Jetpack Compose</div>
+    <div class="tech-pill"><div class="tech-dot" style="background:#F89820"></div>Java / Spring</div>
+    <div class="tech-pill"><div class="tech-dot" style="background:#3178C6"></div>TypeScript</div>
+    <div class="tech-pill"><div class="tech-dot" style="background:#336791"></div>PostgreSQL</div>
+    <div class="tech-pill"><div class="tech-dot" style="background:#13AA52"></div>MongoDB</div>
+    <div class="tech-pill"><div class="tech-dot" style="background:#FFCA28"></div>Firebase</div>
+    <div class="tech-pill"><div class="tech-dot" style="background:#61DAFB"></div>React</div>
+    <div class="tech-pill"><div class="tech-dot" style="background:#fff"></div>Next.js</div>
+  </div>
+</div>
+
+<!-- MOCKUP -->
+<div class="hero-mockup">
+  <div class="mockup-frame">
+    <img src="assets/image-psoft.png" alt="Agendei Dashboard" class="mockup-image" onerror="this.style.display='none';document.querySelector('.mockup-placeholder').style.display='flex'">
+    
+    <!-- Fallback placeholder -->
+    <div class="mockup-placeholder" style="display:none;position:absolute;top:0;left:0;right:0;bottom:0;align-items:center;justify-content:center">
+      <svg width="100%" height="100%" viewBox="0 0 1200 800" fill="none" preserveAspectRatio="xMidYMid slice">
+        <rect width="1200" height="800" fill="#09090b"/>
+        <rect width="200" height="800" fill="#0f0f13"/>
+        <line x1="200" y1="0" x2="200" y2="800" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <rect x="200" y="0" width="1000" height="60" fill="rgba(255,255,255,0.02)"/>
+        <line x1="200" y1="60" x2="1200" y2="60" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+        <text x="280" y="135" font-size="12" fill="rgba(255,255,255,0.4)" font-family="monospace">Dashboard Agendei</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-head anim-up">
+      <div class="section-label" data-i18n="feat_label">Plataforma</div>
+      <h2 class="section-title" data-i18n="feat_title">Uma ferramenta,<br>infinitas possibilidades.</h2>
+      <p class="section-desc" style="margin-top:.75rem" data-i18n="feat_desc">O Agendei foi projetado para cobrir cada aspecto da operação do seu negócio com precisão.</p>
+    </div>
+
+    <div class="features-grid">
+      <div class="feat-card glass featured anim-up d1">
+        <div class="feat-icon" style="background:rgba(253,150,2,.1);color:var(--orange)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         </div>
+        <h3 data-i18n="f1_title">Agenda Dinâmica</h3>
+        <p data-i18n="f1_desc">Sincronização em tempo real para evitar conflitos de horários e maximizar a produtividade da equipe.</p>
+        <span class="feat-tag" data-i18n="f1_tag">Real-time</span>
+      </div>
 
-        <div class="hidden lg:flex items-center gap-10 text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-400">
-            <a href="#plataforma" class="hover:text-primary transition-colors" data-i18n="nav_platform">Plataforma</a>
-            <a href="#ecossistema" class="hover:text-primary transition-colors" data-i18n="nav_eco">Ecossistema</a>
-            <a href="#criadores" class="hover:text-primary transition-colors" data-i18n="nav_team">Criadores</a>
-            <a href="#faq" class="hover:text-primary transition-colors" data-i18n="nav_faq">FAQ</a>
+      <div class="feat-card glass anim-up d2">
+        <div class="feat-icon" style="background:rgba(59,130,246,.1);color:#60a5fa">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
         </div>
+        <h3 data-i18n="f2_title">Gestão Financeira</h3>
+        <p data-i18n="f2_desc">Controle de caixa, fluxo de despesas e metas com dashboards visuais de alta precisão.</p>
+        <span class="feat-tag" style="color:#60a5fa;background:rgba(59,130,246,.08);border-color:rgba(59,130,246,.15)" data-i18n="f2_tag">Dashboards</span>
+      </div>
 
-        <div class="flex items-center gap-6">
-            <div class="flex bg-zinc-900/50 p-1 rounded-full border border-white/5">
-                <button onclick="setLang('pt')" class="lang-btn px-3 py-1 rounded-full text-[9px] font-bold uppercase transition-all active" id="btn-pt">PT</button>
-                <button onclick="setLang('en')" class="lang-btn px-3 py-1 rounded-full text-[9px] font-bold uppercase transition-all" id="btn-en">EN</button>
-                <button onclick="setLang('es')" class="lang-btn px-3 py-1 rounded-full text-[9px] font-bold uppercase transition-all" id="btn-es">ES</button>
-            </div>
-            <a href="https://agendei-alpha.vercel.app" class="bg-white text-black px-6 py-2.5 rounded-full text-[10px] font-black hover:bg-primary transition-all uppercase tracking-widest" data-i18n="nav_app">Entrar</a>
+      <div class="feat-card glass anim-up d3">
+        <div class="feat-icon" style="background:rgba(16,185,129,.1);color:#34d399">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
         </div>
-    </nav>
+        <h3 data-i18n="f3_title">CRM de Clientes</h3>
+        <p data-i18n="f3_desc">Banco de dados completo com histórico de serviços para fidelização e campanhas inteligentes.</p>
+        <span class="feat-tag" style="color:#34d399;background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.15)" data-i18n="f3_tag">CRM</span>
+      </div>
 
-    <!-- Hero -->
-    <section class="min-h-screen flex flex-col items-center justify-center pt-32 px-6 pb-20" id="inicio">
-        <div class="max-w-5xl text-center space-y-8 mb-24 hero-reveal">
-            <div class="inline-block px-4 py-1.5 glass rounded-full text-primary text-[10px] font-black uppercase tracking-widest mb-4">
-                Hairdresser & Barbershop Management v1.0
-            </div>
-            <h1 class="text-6xl md:text-8xl font-black tracking-tighter leading-[0.9]" data-i18n="hero_title">
-                GERENCIE COM <br> <span class="text-primary">PRECISÃO.</span>
-            </h1>
-            <p class="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto font-medium" data-i18n="hero_desc">
-                A plataforma definitiva para cabeleireiros e barbearias que buscam excelência operacional e faturamento inteligente.
-            </p>
+      <div class="feat-card glass anim-up d4">
+        <div class="feat-icon" style="background:rgba(139,92,246,.1);color:#a78bfa">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
         </div>
+        <h3 data-i18n="f4_title">Notificações</h3>
+        <p data-i18n="f4_desc">Alertas inteligentes para clientes e profissionais via push, SMS ou WhatsApp.</p>
+        <span class="feat-tag" style="color:#a78bfa;background:rgba(139,92,246,.08);border-color:rgba(139,92,246,.15)" data-i18n="f4_tag">Automático</span>
+      </div>
 
-        <!-- Tech Grid Section (Static) -->
-        <div class="w-full max-w-4xl mx-auto px-6 py-10 opacity-0" id="tech-section">
-            <p class="text-center text-zinc-600 font-bold text-[9px] uppercase tracking-[0.4em] mb-12" data-i18n="marquee_title">Powered by world-class technologies</p>
-            
-            <div class="tech-grid">
-                <!-- Logos via SVG Paths (Simple Icons) -->
-                <div class="tech-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21.135 1.105H2.865V22.895h18.27V1.105zM3.568 22.192V1.802h16.863V22.192H3.568zM4.903 3.138h14.194v1.105H4.903V3.138zm0 15.111h14.194v1.105H4.903v-1.105zm3.178-12.014h7.838v7.838H8.081V6.235zm1.105 1.105v5.628h5.628V7.34H9.186z"/></svg><span class="text-[9px] font-bold uppercase tracking-widest">Supabase</span></div>
-                <div class="tech-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M24 17.53a3.37 3.37 0 0 1-1.02 2.4l-3.2 3.2a3.38 3.38 0 0 1-4.78 0L.98 9.1a3.38 3.38 0 0 1 0-4.78l3.2-3.2a3.38 3.38 0 0 1 4.78 0l11.4 11.4a1.13 1.13 0 0 0 1.58 0l1.04-1.04a1.13 1.13 0 0 0 0-1.58l-1.04-1.04a1.13 1.13 0 0 0-1.58 0L9.12 7.02l4.78 4.78 1.58-1.58-3.2-3.2 3.2-3.2 3.2 3.2 1.58-1.58-3.2-3.2 3.2-3.2a3.38 3.38 0 0 1 4.78 0l3.2 3.2a3.38 3.38 0 0 1 0 4.78l-3.2 3.2a3.38 3.38 0 0 1-4.78 0l-4.78-4.78-1.58 1.58 3.2 3.2-3.2 3.2-3.2-3.2-1.58 1.58 3.2 3.2-3.2 3.2a1.13 1.13 0 0 0 0 1.58l1.04 1.04a1.13 1.13 0 0 0 1.58 0l1.04-1.04a1.13 1.13 0 0 0 0-1.58l-1.04-1.04a1.13 1.13 0 0 0-1.58 0L9.1 14.88l11.4 11.4a1.13 1.13 0 0 0 1.58 0l1.04-1.04a1.13 1.13 0 0 0 0-1.58z"/></svg><span class="text-[9px] font-bold uppercase tracking-widest">Next.js</span></div>
-                <div class="tech-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M23.334 11.96c0-6.443-5.223-11.666-11.666-11.666-6.443 0-11.666 5.223-11.666 11.666 0 5.814 4.254 10.635 9.843 11.537v-8.16h-2.966v-3.377h2.966v-2.57c0-2.928 1.743-4.545 4.412-4.545 1.278 0 2.616.228 2.616.228v2.877h-1.474c-1.451 0-1.903.901-1.903 1.825v2.185h3.243l-.518 3.377h-2.725v8.16c5.589-.902 9.843-5.723 9.843-11.537z"/></svg><span class="text-[9px] font-bold uppercase tracking-widest">React</span></div>
-                <div class="tech-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12.001 3.285c-4.809 0-8.707 3.898-8.707 8.707 0 4.81 3.898 8.707 8.707 8.707 4.81 0 8.707-3.897 8.707-8.707 0-4.809-3.897-8.707-8.707-8.707zm0 15.938c-3.987 0-7.23-3.243-7.23-7.231 0-3.987 3.243-7.23 7.23-7.23s7.231 3.243 7.231 7.23c0 3.988-3.244 7.231-7.231 7.231zM11.39 6.23h1.22v9.54h-1.22zM15.42 6.23h1.22v9.54h-1.22z"/></svg><span class="text-[9px] font-bold uppercase tracking-widest">Firebase</span></div>
-                <div class="tech-item"><svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M11.648 18.854H13.04V4.49H11.648v14.364zM7.464 14.67h1.392V8.674H7.464V14.67zM15.832 14.67h1.392V8.674h-1.392V14.67zM3.28 10.486h1.392V8.674H3.28v1.812zM20.008 10.486H21.4V8.674h-1.392v1.812z"/></svg><span class="text-[9px] font-bold uppercase tracking-widest">Tailwind</span></div>
-            </div>
+      <div class="feat-card glass anim-up d5">
+        <div class="feat-icon" style="background:rgba(236,72,153,.1);color:#f472b6">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
         </div>
+        <h3 data-i18n="f5_title">Relatórios</h3>
+        <p data-i18n="f5_desc">Análises detalhadas de desempenho, receita e satisfação para decisões estratégicas.</p>
+        <span class="feat-tag" style="color:#f472b6;background:rgba(236,72,153,.08);border-color:rgba(236,72,153,.15)" data-i18n="f5_tag">Analytics</span>
+      </div>
 
-        <div class="w-full max-w-6xl relative mt-10" id="mockup-trigger">
-            <div class="glass rounded-[32px] p-2 shadow-2xl overflow-hidden relative group border-white/10 mockup-anim">
-                <img src="https://vpalasmdcxnhpsbwmsqq.supabase.co/storage/v1/object/public/logos/mockup_agendei_real.png" alt="Agendei Dashboard" class="w-full rounded-2xl">
-            </div>
+      <div class="feat-card glass anim-up d6">
+        <div class="feat-icon" style="background:rgba(34,197,94,.1);color:#4ade80">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
         </div>
-    </section>
+        <h3 data-i18n="f6_title">App Mobile</h3>
+        <p data-i18n="f6_desc">Gerencie sua barbearia de qualquer lugar com o aplicativo nativo Android em Kotlin.</p>
+        <span class="feat-tag" style="color:#4ade80;background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.15)" data-i18n="f6_tag">Android</span>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Plataforma -->
-    <section id="plataforma" class="px-8">
-        <div class="max-w-7xl mx-auto space-y-24">
-            <div class="text-center md:text-left space-y-4 reveal-up">
-                <h2 class="text-5xl font-black tracking-tight" data-i18n="plat_title">Uma ferramenta, <br> infinitas possibilidades.</h2>
-                <p class="text-zinc-500 text-lg font-medium" data-i18n="plat_desc">O Agendei foi projetado para cobrir cada centímetro da operação do seu negócio.</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="feature-card glass p-12 rounded-[48px] space-y-8 reveal-up">
-                    <div class="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                    </div>
-                    <h3 class="text-2xl font-bold" data-i18n="feat_1_title">Agenda Dinâmica</h3>
-                    <p class="text-zinc-500 font-medium leading-relaxed" data-i18n="feat_1_desc">Sincronização em tempo real para evitar conflitos de horários e otimizar a produtividade.</p>
-                </div>
-                <div class="feature-card glass p-12 rounded-[48px] space-y-8 reveal-up">
-                    <div class="w-14 h-14 bg-blue-500/10 rounded-2xl flex items-center justify-center text-blue-500">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                    </div>
-                    <h3 class="text-2xl font-bold" data-i18n="feat_2_title">Gestão Financeira</h3>
-                    <p class="text-zinc-500 font-medium leading-relaxed" data-i18n="feat_2_desc">Controle de caixa, fluxo de despesas e metas com dashboards visuais de alta precisão.</p>
-                </div>
-                <div class="feature-card glass p-12 rounded-[48px] space-y-8 reveal-up">
-                    <div class="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                    </div>
-                    <h3 class="text-2xl font-bold" data-i18n="feat_3_title">CRM de Clientes</h3>
-                    <p class="text-zinc-500 font-medium leading-relaxed" data-i18n="feat_3_desc">Banco de dados completo com histórico de serviços para fidelização inteligente.</p>
-                </div>
-            </div>
+<!-- HOW IT WORKS -->
+<section id="workflow" style="background:rgba(255,255,255,.01)">
+  <div class="container">
+    <div class="section-head center anim-up">
+      <div class="section-label" data-i18n="how_label">Como funciona</div>
+      <h2 class="section-title" data-i18n="how_title">Simples de usar,<br>poderoso por dentro.</h2>
+    </div>
+    <div class="workflow-steps">
+      <div class="step-card glass anim-up d1">
+        <div class="step-number">01</div>
+        <div class="step-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
         </div>
-    </section>
-
-    <!-- Ecossistema -->
-    <section id="ecossistema" class="bg-zinc-950/40">
-        <div class="max-w-7xl mx-auto px-8 text-center space-y-20">
-            <div class="space-y-4 reveal-up">
-                <h2 class="text-4xl font-black" data-i18n="eco_title">Stack de Alta Performance</h2>
-                <p class="text-zinc-500 max-w-xl mx-auto font-medium" data-i18n="eco_desc">Utilizamos as tecnologias que sustentam as maiores plataformas do mundo.</p>
-            </div>
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-12">
-                <div class="p-10 glass rounded-[40px] space-y-6 hover:border-primary transition-all eco-box">
-                    <svg role="img" viewBox="0 0 24 24" class="h-10 mx-auto fill-zinc-500 hover:fill-primary transition-all" xmlns="http://www.w3.org/2000/svg"><path d="M21.135 1.105H2.865V22.895h18.27V1.105zM3.568 22.192V1.802h16.863V22.192H3.568zM4.903 3.138h14.194v1.105H4.903V3.138zm0 15.111h14.194v1.105H4.903v-1.105zm3.178-12.014h7.838v7.838H8.081V6.235zm1.105 1.105v5.628h5.628V7.34H9.186z"/></svg>
-                    <span class="text-[10px] font-black uppercase tracking-widest text-zinc-500">Supabase DB</span>
-                </div>
-                <!-- ... similar SVGs for others ... -->
-            </div>
+        <h3 data-i18n="step1_title">Cadastre seu negócio</h3>
+        <p data-i18n="step1_desc">Configure sua barbearia em minutos. Adicione serviços, profissionais e horários de funcionamento.</p>
+      </div>
+      <div class="step-card glass anim-up d2">
+        <div class="step-number">02</div>
+        <div class="step-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         </div>
-    </section>
-
-    <!-- Criadores -->
-    <section id="criadores" class="px-8 overflow-hidden">
-        <div class="max-w-7xl mx-auto space-y-24">
-            <div class="text-center space-y-4 reveal-up">
-                <h2 class="text-5xl font-black tracking-tight" data-i18n="team_title">Os Criadores</h2>
-                <p class="text-zinc-500 font-bold uppercase tracking-[0.3em] text-xs" data-i18n="team_subtitle">Mentes por trás do projeto</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-10">
-                <div class="space-y-6 text-center group creator-reveal">
-                    <div class="aspect-square rounded-[56px] overflow-hidden border-2 border-primary/20 relative shadow-2xl">
-                        <img src="https://avatars.githubusercontent.com/u/108341604?v=4" class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-1000 scale-110 group-hover:scale-100">
-                    </div>
-                    <div>
-                        <h4 class="text-xl font-black tracking-tight">Matheus Lucindo</h4>
-                        <p class="text-primary text-[10px] font-bold uppercase tracking-widest" data-i18n="role_matheus">Dev & Manager</p>
-                    </div>
-                </div>
-            </div>
+        <h3 data-i18n="step2_title">Receba agendamentos</h3>
+        <p data-i18n="step2_desc">Clientes agendam online 24h por dia. Você recebe notificação imediata e gerencia tudo no app.</p>
+      </div>
+      <div class="step-card glass anim-up d3">
+        <div class="step-number">03</div>
+        <div class="step-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
         </div>
-    </section>
+        <h3 data-i18n="step3_title">Cresça com dados</h3>
+        <p data-i18n="step3_desc">Analise relatórios, acompanhe receita e tome decisões estratégicas baseadas em dados reais.</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- FAQ -->
-    <section id="faq" class="bg-zinc-950/20">
-        <div class="max-w-4xl mx-auto px-8 space-y-20">
-            <h2 class="text-5xl font-black text-center reveal-up" data-i18n="faq_title">Dúvidas Frequentes</h2>
-            <div class="space-y-4">
-                <div class="glass p-10 rounded-[40px] space-y-4 reveal-up">
-                    <h4 class="font-bold text-xl" data-i18n="faq_q1">O sistema é gratuito?</h4>
-                    <p class="text-zinc-500 font-medium" data-i18n="faq_a1">Sim, a versão Alpha do Agendei está disponível gratuitamente para testes e validação.</p>
-                </div>
-            </div>
+<!-- STACK -->
+<section id="stack">
+  <div class="container">
+    <div class="section-head center anim-up">
+      <div class="section-label" data-i18n="stack_label">Tecnologia</div>
+      <h2 class="section-title" data-i18n="stack_title">Stack de Alta Performance</h2>
+      <p class="section-desc" style="margin-top:.75rem" data-i18n="stack_desc">Utilizamos as tecnologias que sustentam as maiores plataformas do mundo.</p>
+    </div>
+    <div class="stack-grid">
+      <div class="stack-item glass anim-up d1">
+        <svg viewBox="0 0 24 24" fill="#7F52FF" xmlns="http://www.w3.org/2000/svg"><path d="M2 0v24l10-12 10 12V0Z"/></svg>
+        <span>Kotlin</span>
+      </div>
+      <div class="stack-item glass anim-up d2">
+        <svg viewBox="0 0 24 24" fill="#4285F4" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+        <span>Jetpack</span>
+      </div>
+      <div class="stack-item glass anim-up d3">
+        <svg viewBox="0 0 24 24" fill="#F89820" xmlns="http://www.w3.org/2000/svg"><path d="M8.851 18.56s-.917.534.653.714c1.902.218 2.874.187 4.969-.211 0 0 .552.346 1.321.646-4.699 2.013-10.633-.118-6.943-1.149M8.276 15.933s-1.028.761.542.924c2.032.209 3.636.227 6.413-.308 0 0 .384.389.987.602-5.679 1.661-12.007.13-7.942-1.218M13.116 11.475c1.158 1.333-.304 2.533-.304 2.533s2.939-1.518 1.589-3.418c-1.261-1.772-2.228-2.652 3.007-5.688 0 .001-8.216 2.051-4.292 6.573M19.33 20.504s.679.559-.747.991c-2.712.822-11.288 1.069-13.669.033-.856-.373.75-.89 1.254-.998.527-.114.828-.093.828-.093-.953-.671-6.156 1.317-2.643 1.887 9.58 1.553 17.462-.7 14.977-1.82M9.292 13.21s-4.362 1.036-1.544 1.412c1.189.159 3.561.123 5.77-.062 1.806-.152 3.618-.477 3.618-.477s-.637.272-1.098.587c-4.429 1.165-12.986.623-10.522-.568 2.082-1.006 3.776-.892 3.776-.892M17.116 17.584c4.503-2.34 2.421-4.589.968-4.285-.355.074-.515.138-.515.138s.132-.207.385-.297c2.875-1.011 5.086 2.981-.928 4.562 0 .001.07-.062.09-.118M14.401 0s2.494 2.494-2.365 6.33c-3.896 3.077-.888 4.832-.001 6.836-2.274-2.053-3.943-3.858-2.824-5.539 1.644-2.469 6.197-3.665 5.19-7.627M9.734 23.924c4.322.277 10.959-.153 11.116-2.198 0 0-.302.775-3.572 1.391-3.688.694-8.239.613-10.937.168 0 .001.553.457 3.393.639"/></svg>
+        <span>Java/Spring</span>
+      </div>
+      <div class="stack-item glass anim-up d4">
+        <svg viewBox="0 0 24 24" fill="#3178C6" xmlns="http://www.w3.org/2000/svg"><path d="M1.125 0C.502 0 0 .502 0 1.125v21.75C0 23.498.502 24 1.125 24h21.75c.623 0 1.125-.502 1.125-1.125V1.125C24 .502 23.498 0 22.875 0zm17.363 9.75c.612 0 1.154.037 1.627.111a6.38 6.38 0 0 1 1.306.34v2.294a3.86 3.86 0 0 0-.756-.261 5.734 5.734 0 0 0-.918-.162.97.97 0 0 0-.738.225c-.197.153-.295.359-.295.528 0 .378.121.649.364.848.204.158.489.226 1.025.226h.63v2.041h-.107c-.265 0-.736-.103-1.413-.309-.677-.206-1.59-.348-2.738-.348-.465 0-.924.05-1.377.144-.453.094-.872.223-1.257.388a2.934 2.934 0 0 0-.856.667c-.206.276-.309.617-.309 1.022 0 .509.148.943.444 1.303.296.36.763.651 1.4.873.637.223 1.589.337 2.856.337h1.884v2.041h-4.784c-1.201 0-2.157-.136-2.869-.407-.712-.271-1.233-.667-1.564-1.188-.331-.52-.497-1.127-.497-1.822 0-.467.086-.923.259-1.366.173-.443.423-.827.75-1.15.327-.323.738-.579 1.231-.77.493-.19 1.045-.285 1.656-.285.419 0 .828.034 1.227.1.4.067.794.162 1.183.286z"/></svg>
+        <span>TypeScript</span>
+      </div>
+      <div class="stack-item glass anim-up d5">
+        <svg viewBox="0 0 24 24" fill="#336791" xmlns="http://www.w3.org/2000/svg"><path d="M23.5593 13.5093c-.1217-.0987-.2469-.1911-.3741-.2798a7.3871 7.3871 0 0 0-.4083-.262 7.6513 7.6513 0 0 0-.4487-.2424 10.8505 10.8505 0 0 0 .1217-.4952c.0793-.3937.1326-.7832.1596-1.1726.0289-.3872.0275-.7765-.0044-1.1638-.0277-.3873-.1027-.7688-.2236-1.1386-.0628-.1955-.1406-.3861-.2316-.5696a4.6038 4.6038 0 0 0-.3291-.5293 4.2543 4.2543 0 0 0-.4258-.4813 3.3506 3.3506 0 0 0-.2783-.2366 4.0793 4.0793 0 0 0-.4062-.279 4.0657 4.0657 0 0 0-.5-.2345 4.5117 4.5117 0 0 0-.5758-.1746 4.7929 4.7929 0 0 0-1.2955-.1126l-.1726.0104a5.6367 5.6367 0 0 0-.7041.1073 5.4413 5.4413 0 0 0-.6688.2128 5.1547 5.1547 0 0 0-.6188.3145 4.6958 4.6958 0 0 0-.5555.4065 4.3207 4.3207 0 0 0-.4751.4847 4.0625 4.0625 0 0 0-.3791.5501 3.8655 3.8655 0 0 0-.2695.6002 3.5948 3.5948 0 0 0-.1467.6364c-.0315.2218-.0438.4472-.037.6726.0068.2253.0315.4502.0745.6726.0434.2224.106.4409.1872.652.0812.2112.1807.4152.2977.6099.1168.1946.2512.3793.4026.5506.1516.1714.3197.3281.5022.4667.1824.1386.3789.2585.5866.3573.2078.0987.4267.1783.6533.2363.2266.0579.4594.0952.6939.1112.2345.0159.4701.0109.7034-.0151a5.6 5.6 0 0 0 .6876-.1502c.2203-.0674.4342-.1508.6385-.2484.2043-.0975.3987-.2091.5818-.3327.183-.1236.3536-.2592.5109-.4057.1573-.1464.3009-.304.4295-.4699.1285-.166.2417-.3403.3376-.5207a4.2054 4.2054 0 0 0 .2308-.5632c.0603-.1934.1024-.3916.1257-.5922.0241-.201.0297-.4033.0168-.6064-.0134-.203-.0457-.4046-.0965-.6023-.0508-.1977-.1199-.3903-.2062-.5749a5.0374 5.0374 0 0 0-.2961-.546c-.1137-.1732-.2384-.3383-.3742-.4937-.1357-.1555-.2822-.2999-.4386-.4329a5.5455 5.5455 0 0 0-.5043-.3663l.0012.0015c.0437.0289.0867.059.1289.0901.0422.031.0835.0632.1238.0963.0403.0332.0797.0672.118.1023.0383.0352.0755.0713.1116.1082.0362.0369.0712.0747.1051.1132.0339.0386.0666.0779.0982.118.0316.0401.062.0808.0912.1224.0291.0415.057.0837.0837.1265a4.1015 4.1015 0 0 1 .1446.2712c.0415.0946.0774.1919.1074.2909.03.099.0539.1996.0713.3015.0174.1019.0284.2047.0327.3084.0042.104.002.2082-.0068.3126-.0088.1044-.0241.2083-.0458.311-.0216.1027-.0492.2039-.0826.3033-.0333.0994-.0724.1966-.1169.2909a4.6278 4.6278 0 0 1-.145.2724c-.0552.0882-.1148.1731-.1787.2538-.0638.0806-.1318.1568-.2039.2282-.072.0714-.1479.1377-.2273.1989a4.2018 4.2018 0 0 1-.2487.1663c-.0867.0524-.1762.1-.2682.1424-.092.0423-.1864.0793-.2826.1108-.0963.0314-.1943.0572-.2939.0773-.0995.0201-.1999.0346-.3012.0431-.1013.0085-.2033.0113-.3054.008a3.6424 3.6424 0 0 1-.3071-.0285 3.4765 3.4765 0 0 1-.3039-.0718 3.5059 3.5059 0 0 1-.2948-.1136 3.6002 3.6002 0 0 1-.2789-.1544 3.698 3.698 0 0 1-.2556-.1937 3.8305 3.8305 0 0 1-.2253-.2317 4.0025 4.0025 0 0 1-.1879-.268 4.2165 4.2165 0 0 1-.1434-.302c-.0408-.1048-.0748-.2128-.1016-.3228-.0267-.11-.0463-.222-.0587-.3348-.0123-.1129-.0175-.2264-.0154-.3399.0021-.1135.0115-.2265.028-.3393.0165-.1127.0401-.2243.0706-.3343.0305-.11.0681-.2178.1126-.3229.0445-.105.0959-.2069.1538-.3048a4.399 4.399 0 0 1 .1933-.2853c.0727-.0912.1509-.178.2341-.2599.0832-.0819.1717-.158.2648-.229.093-.0709.1907-.1367.2923-.1968.1016-.06.2071-.1143.3157-.1627.1086-.0484.2202-.0908.3335-.1266.1133-.0358.2281-.0651.3441-.088a4.3485 4.3485 0 0 1 .3558-.0496 4.3969 4.3969 0 0 1 .3609-.0104c.1209.0023.2411.0146.3599.0371.1188.0226.2357.0555.3494.0984.1136.0429.2232.0957.3273.1579.1041.0622.2021.1337.2929.2138.0908.08.1741.1682.2489.2629.0748.0947.141.1959.198.2998.057.1038.1046.2101.1427.3186.0382.1085.0665.2193.0851.3315.0186.1121.0273.2256.0263.3393-.001.1138-.0122.2272-.0337.3389-.0215.1117-.0531.2212-.0944.3272-.0413.106-.0922.2075-.1523.3026-.06.0951-.1293.1837-.2072.2641-.0779.0803-.1641.1527-.2571.217-.093.0643-.1928.1197-.2977.1665-.1049.0468-.2139.0846-.3251.1133-.111.0287-.2238.0483-.3375.0586-.1136.0103-.2276.0114-.3411.0029-.1136-.0084-.2261-.0265-.3363-.0541-.1102-.0275-.2173-.0645-.3193-.1104-.102-.0458-.1987-.1007-.2887-.1641-.0899-.0634-.1727-.1351-.2471-.2137-.0744-.0786-.1403-.1639-.1968-.2548-.0565-.0909-.1033-.1867-.1401-.2858-.0368-.099-.0635-.2017-.0801-.3063-.0165-.1045-.023-.2102-.0192-.3159.0038-.1057.0181-.2107.043-.3137.0248-.103.0599-.2031.1049-.2987.045-.0956.0994-.1862.1626-.2697.0633-.0836.1348-.1601.2138-.2278.0789-.0677.1648-.1267.2564-.1763.0915-.0496.1882-.0901.2882-.1209.1-.0308.2022-.052.3056-.0635.1034-.0114.2076-.0131.3113-.0049.1036.0081.2059.0261.3047.0536.0988.0275.1933.0645.2826.1105.0893.046.1726.1012.2484.1649.0759.0637.1442.1354.2039.2138.0597.0784.111.1629.1529.252.0419.0891.0745.1823.0972.278.0227.0958.0356.1939.0385.293.0029.0991-.0007.1985-.0106.2978-.0099.0992-.0259.1975-.0478.294-.0219.0966-.0498.1913-.0834.2836a5.2714 5.2714 0 0 1-.1153.2776c-.0443.0894-.0935.1762-.1473.2598-.054.0835-.112.163-.1741.2386-.0622.0755-.128.1475-.1975.2154-.0695.0679-.1425.1317-.2186.1912-.0761.0595-.1551.1148-.2367.1655-.0816.0507-.1655.0971-.2516.1388-.086.0417-.1737.0789-.2628.1113-.0891.0324-.1795.0602-.2712.0833-.0917.023-.184.041-.2772.0543-.0931.0133-.1866.0219-.2808.0258-.0942.0039-.1885.003-.2828-.0026a5.7375 5.7375 0 0 1-.2816-.0328 5.6688 5.6688 0 0 1-.2774-.0659 5.5983 5.5983 0 0 1-.27-.0983 5.5347 5.5347 0 0 1-.2602-.129 5.4818 5.4818 0 0 1-.2475-.1583 5.4441 5.4441 0 0 1-.2325-.1868 5.4285 5.4285 0 0 1-.2146-.2138c-.0671-.0769-.1299-.1574-.1879-.2413-.058-.0839-.1112-.1713-.1591-.262-.0479-.0907-.0903-.1847-.1267-.2815-.0364-.0968-.0665-.196-.0901-.2975a5.3478 5.3478 0 0 1-.0576-.3127 5.31 5.31 0 0 1-.0245-.3255 5.3068 5.3068 0 0 1 .0095-.3343c.0121-.1112.0316-.2213.0585-.3297.0269-.1084.0608-.2148.1015-.3185.0407-.1037.0881-.2039.1419-.2999.0537-.0959.1137-.1876.1796-.2742.0659-.0867.1374-.1685.2145-.2449a5.1835 5.1835 0 0 1 .2479-.2159 5.1484 5.1484 0 0 1 .2774-.1877 5.1255 5.1255 0 0 1 .3012-.1614 5.1194 5.1194 0 0 1 .3217-.1365 5.0927 5.0927 0 0 1 .339-.1127c.116-.0329.2338-.0609.3523-.0842.1186-.0232.2381-.0413.358-.0545.1199-.0132.2403-.0215.3608-.025.1205-.0035.2411-.0022.3611.0039.12.0061.2393.0171.3577.0328.1183.0157.2351.0362.3504.0617.1153.0254.2289.0556.3398.0903.1109.0348.2193.0743.3245.118.1053.0436.208.0913.3071.1427.0992.0514.1949.107.2867.1668.0919.0598.1797.1237.2634.1915.0836.0678.1629.14.238.2162.0751.0762.1458.1565.2118.2401.066.0837.1274.1711.1836.262.0562.0909.1071.1853.1526.283.0455.0977.0855.1985.1196.302.0341.1034.0622.2093.0841.3165.0219.1073.0376.2159.0468.3252.0093.1093.0122.2192.0085.3291-.0036.1099-.0139.2193-.0306.3277-.0168.1083-.0401.2151-.07.32-.0298.1049-.066.2074-.1081.307-.0422.0996-.0906.1964-.1447.2896-.0542.0932-.1143.1826-.1801.2677a5.2384 5.2384 0 0 1-.2141.2462 5.2848 5.2848 0 0 1-.2457.2248 5.3447 5.3447 0 0 1-.2739.2053 5.4197 5.4197 0 0 1-.2987.1878 5.5108 5.5108 0 0 1-.319.172 5.5984 5.5984 0 0 1-.3374.1578 5.7027 5.7027 0 0 1-.3525.1446 5.8263 5.8263 0 0 1-.364.1322c-.124.0422-.2497.0796-.376.1124-.1263.0327-.2534.0609-.381.0841a7.7197 7.7197 0 0 1-.3869.0574 7.7851 7.7851 0 0 1-.3912.032 7.7784 7.7784 0 0 1-.3921-.0006 7.737 7.737 0 0 1-.3904-.0337 7.6836 7.6836 0 0 1-.3857-.0664 7.6247 7.6247 0 0 1-.3777-.0985 7.5652 7.5652 0 0 1-.3666-.1299 7.5093 7.5093 0 0 1-.3521-.1604 7.4613 7.4613 0 0 1-.3345-.1901 7.4233 7.4233 0 0 1-.3138-.2188 7.4018 7.4018 0 0 1-.2899-.2467 7.4099 7.4099 0 0 1-.2632-.2736c-.0816-.0953-.158-.1939-.2293-.296-.0712-.1022-.1373-.2077-.1975-.3164a7.5011 7.5011 0 0 1-.1609-.3338 7.5835 7.5835 0 0 1-.1224-.3491 7.6766 7.6766 0 0 1-.0823-.3621 7.7682 7.7682 0 0 1-.0405-.3726 7.836 7.836 0 0 1 .0024-.3805c.0139-.1268.0338-.2529.0594-.3777.0256-.1248.0567-.2479.0932-.3688.0365-.1209.0785-.2395.126-.3553.0475-.1159.1003-.2283.1581-.3369.0578-.1087.1207-.2136.1883-.3142.0676-.1006.1399-.1966.2165-.2881.0766-.0915.1575-.1786.2424-.261.0848-.0824.1735-.1601.266-.2326.0925-.0726.1886-.1401.2883-.2023.0997-.0622.2029-.1191.3088-.1704.1059-.0513.2145-.0974.3254-.138.1109-.0406.2237-.0759.3381-.1059.1144-.03.2299-.0548.3462-.0741.1163-.0194.2333-.0334.3505-.042.1172-.0086.2346-.012.3519-.0101.1173.002.2342.0093.3504.0222.1162.0128.2315.0309.3455.054.1139.023.226.0511.3356.0843.1097.0332.2167.0714.3208.1146.1042.0432.2053.0912.3027.1441.0975.0528.1911.1105.2803.1727.0892.0622.1737.1289.2531.2.0794.0711.1535.1466.2221.2261.0685.0795.1315.1629.1883.2497.0568.0869.1073.1774.1512.271.0439.0937.081.1906.1112.2898.0302.0992.0533.1999.0691.3016.0158.1016.0245.2044.0257.3076.0013.1032-.0049.2066-.0181.3096-.0133.1029-.0337.2048-.0609.305-.0272.1001-.0614.1981-.1024.2934-.0409.0953-.0885.1872-.1424.275-.0539.0878-.1138.1716-.1793.2509-.0656.0792-.1366.1538-.2127.2234-.0761.0695-.1569.1342-.2422.1939-.0853.0596-.1748.1144-.268.164-.0931.0496-.1901.0945-.2899.1344-.0998.0399-.2022.0748-.3067.1046-.1044.0299-.2106.0548-.3177.0747-.1071.0199-.2149.035-.3234.0452-.1084.0102-.2171.0155-.3257.016-.1086.0004-.217-.0042-.3244-.0139-.1073-.0096-.2133-.0244-.3178-.0441-.1044-.0197-.207-.0445-.307-.0742-.0999-.0296-.1968-.0641-.291-.1033-.0942-.0392-.1851-.0832-.2723-.1317-.0873-.0485-.1709-.1018-.2504-.1593-.0795-.0576-.1545-.1196-.2249-.1857-.0704-.0661-.1363-.1361-.197-.2101-.0607-.074-.1164-.1516-.166-.2328-.0496-.0811-.0928-.1653-.1299-.2527-.0371-.0873-.0678-.177-.0921-.2689-.0243-.0919-.0421-.1855-.0534-.2808a3.9386 3.9386 0 0 1-.0085-.2831c.0063-.0944.0189-.1876.0376-.2793.0187-.0917.0434-.1816.0737-.2692.0304-.0876.0666-.173.1083-.2553.0418-.0823.0891-.1614.1415-.2367.0524-.0754.1101-.1465.1725-.2126.0624-.0661.1293-.1273.2003-.183.0709-.0557.1457-.1065.2239-.1521.0782-.0455.1597-.0858.2439-.1206.0842-.0348.1708-.0644.2592-.0885.0884-.0241.1783-.0429.2692-.0562.091-.0133.1824-.0212.2739-.0237.0914-.0025.1827.0003.2732.0082.0905.0079.1798.0208.2678.0387.0879.0178.174.0406.2578.0682.0839.0276.1651.0598.243.0965.0779.0367.1527.078.2237.124.0711.046.1384.0963.2015.1509.0632.0545.1222.1131.1762.1756.054.0625.1032.1286.1474.1981.0443.0694.0833.1422.1167.2179.0334.0757.0612.1539.0832.2341.022.0802.0381.1623.0481.2458.0101.0835.0141.167.0118.2505-.0022.0835-.0108.1668-.0254.2493-.0146.0824-.0354.1632-.0621.2425-.0266.0792-.0591.1563-.0972.2305a3.5547 3.5547 0 0 1-.1325.2154c-.0521.0681-.11.1318-.1729.1901-.0629.0583-.1306.1116-.2029.1584-.0723.0469-.1489.0882-.229.1232-.0801.0351-.1636.0638-.2494.0856-.0858.0218-.1732.037-.261.046-.0877.0089-.1758.012-.2634.0093-.0876-.0028-.1743-.0115-.2598-.0259-.0855-.0144-.1694-.0347-.2511-.0607-.0817-.0259-.1607-.0576-.2365-.0946-.0758-.037-.1481-.0795-.2163-.1271-.0682-.0476-.1323-.1003-.1916-.1578-.0594-.0576-.1142-.1199-.1638-.1866-.0497-.0667-.0938-.1377-.1321-.2122a3.2284 3.2284 0 0 1-.0991-.2362 3.1655 3.1655 0 0 1-.0655-.2551c-.0155-.0876-.0249-.1764-.0278-.2657a3.1044 3.1044 0 0 1 .0049-.2729c.0104-.0918.0271-.1827.0497-.2724.0227-.0896.0511-.1773.0854-.2627.0343-.0853.0742-.1677.1197-.2464.0455-.0786.0964-.1533.1524-.2233.0561-.0701.1171-.1354.1829-.1953.0659-.0599.136-.1148.2104-.1641.0744-.0494.1528-.0935.2347-.1321.0819-.0386.1671-.072.2551-.1.0879-.028.1783-.0503.2704-.0667.0921-.0163.1856-.0265.2795-.0304.0939-.0039.1879-.0014.2811.0072.0932.0086.1851.023.2751.0431.09.0202.1775.046.2618.0773.0843.0314.1649.0682.2405.1102.076.042.1473.0892.2133.1413.0661.0522.127.1093.1826.1708.0557.0615.106.1274.1507.1973.0446.0699.0832.1435.1155.2204.0324.0769.0582.1565.0771.2377.0189.0813.0312.164.0363.2477.0052.0836.0036.1675-.0047.2512-.0083.0837-.0231.1666-.0442.2481-.021.0815-.0481.1613-.0811.2381-.033.0769-.0718.1509-.1161.2214a3.3668 3.3668 0 0 1-.1494.2023 3.4183 3.4183 0 0 1-.1782.1815 3.4817 3.4817 0 0 1-.2003.1616 3.5462 3.5462 0 0 1-.2183.1443 3.6226 3.6226 0 0 1-.2332.1283 3.6977 3.6977 0 0 1-.2446.1138c-.0838.0335-.1693.0631-.2563.0888-.0869.0257-.1747.0478-.2634.066-.0887.0182-.1779.0326-.2677.0432-.0897.0106-.1795.0174-.2695.0204-.0899.003-.1794.0022-.2682-.0021-.0888-.0044-.1768-.0123-.2636-.0239-.0868-.0116-.1724-.0267-.2563-.0455-.0839-.0187-.1659-.0408-.2455-.0664-.0795-.0256-.1563-.0547-.2296-.087-.073-.0323-.1432-.0679-.2092-.1069-.0659-.039-.1282-.0813-.1861-.1265-.0579-.0452-.1116-.0936-.1607-.1448-.0491-.0511-.0936-.1052-.1329-.1618-.0394-.0566-.074-.1157-.1036-.1768-.0296-.0612-.054-.1242-.0731-.1889-.019-.0646-.0329-.1305-.0414-.197-.0086-.0665-.0119-.1337-.0099-.2009.002-.0672.0093-.1342.0217-.2005.0124-.0662.0298-.1315.0521-.1951.0223-.0636.0494-.1254.0811-.1848.0316-.0594.0679-.1162.1085-.1697.0407-.0535.0857-.1038.1347-.1504a3.0157 3.0157 0 0 1 .1596-.1326c.056-.0434.115-.0831.1768-.1188.0618-.0357.1261-.0673.1924-.0943.0664-.027.1346-.0495.2041-.0671.0695-.0177.1399-.0306.211-.0385a2.9905 2.9905 0 0 1 .2166-.0046c.0718.002.1433.0094.2134.0219.0701.0124.1384.0299.2045.0524.0661.0226.1296.0502.1895.0823.0599.032.1163.0685.1679.1093.0516.0408.099.086.1419.1354.0428.0493.0812.1027.1148.1593a2.6757 2.6757 0 0 1 .0857.1821c.0215.0624.0386.1268.0512.1921.0127.0653.0208.1314.0241.1978.0033.0664.0018.133-.0044.1993-.0062.0662-.0172.1322-.0327.197-.0155.0649-.0356.1285-.0601.1904-.0244.0618-.0531.1218-.086.1788a2.6576 2.6576 0 0 1-.1177.1655 2.7004 2.7004 0 0 1-.1457.1525 2.736 2.736 0 0 1-.1697.1413 2.7741 2.7741 0 0 1-.1896.1322 2.8199 2.8199 0 0 1-.2051.124 2.8636 2.8636 0 0 1-.2161.1169 2.9055 2.9055 0 0 1-.2231.1099c-.0771.0334-.155.063-.2339.0882-.079.0251-.1587.0466-.239.0643-.0803.0177-.1607.0316-.2417.0416-.081.01-.1618.0161-.2427.0183-.0809.0022-.1612-.0006-.2412-.0079-.0799-.0074-.1593-.019-.238-.0349-.0786-.0158-.1566-.0358-.2335-.0598-.0769-.0239-.1525-.0518-.2262-.0834-.0737-.0315-.1451-.0667-.2141-.1052-.069-.0385-.1354-.0804-.1985-.1252-.0631-.0448-.1231-.093-.1793-.1441-.0562-.0512-.109-.1051-.1576-.1618-.0487-.0567-.0932-.1161-.1333-.178-.04-.0619-.0754-.1261-.1061-.1922-.0307-.0661-.0565-.1339-.0773-.2032-.0208-.0693-.0365-.14-.047-.2118-.0105-.0717-.0159-.1441-.016-.2167 0-.0726.0056-.1451.0164-.2168.0108-.0716.0268-.1423.048-.2115.0212-.0692.0474-.1366.0782-.2015.0308-.0648.066-.1271.1051-.1858.039-.0586.0822-.1138.1291-.1649.0469-.0511.0975-.0981.152-.1404.0545-.0423.1126-.0806.1733-.1144.0607-.0338.1238-.0635.189-.0888.0651-.0252.1325-.0463.2009-.0629.0685-.0166.1378-.0287.2072-.0362.0694-.0075.1389-.0104.2082-.0086.0692.0018.138.0082.206.019.068.0107.1347.0261.1993.046.0646.0198.1268.044.1862.0723.0594.0283.1155.0607.167.0966.0515.036.099.0758.1416.1189.0427.0431.0804.0896.1133.1392.033.0495.0607.1021.0829.1573.0223.0552.0391.1128.0503.1718.0113.059.0172.1192.0177.1796.0005.0603-.004.1207-.0133.1805-.0094.0598-.0233.1189-.0417.1762-.0183.0573-.0411.1127-.068.1663a2.3832 2.3832 0 0 1-.092.155 2.4025 2.4025 0 0 1-.1125.1435 2.4237 2.4237 0 0 1-.1296.1323 2.4444 2.4444 0 0 1-.1433.1217 2.4673 2.4673 0 0 1-.1536.1115 2.4916 2.4916 0 0 1-.1604.1016c-.0558.031-.1131.0591-.1714.0842-.0584.0252-.1177.0476-.178.0672-.0602.0197-.1213.0363-.1831.0499-.0619.0135-.124.024-.1862.0315-.0623.0074-.1245.0118-.1866.013-.0621.0012-.1238-.0007-.1851-.0059-.0613-.0051-.1219-.0135-.1814-.025-.0596-.0115-.1181-.0261-.1752-.0437-.057-.0175-.1125-.038-.1662-.0615a2.3261 2.3261 0 0 1-.157-.0787c-.0497-.029-.0976-.0614-.1432-.0967-.0456-.0354-.0886-.0737-.129-.1147a2.2629 2.2629 0 0 1-.1116-.1303 2.2386 2.2386 0 0 1-.0912-.146 2.2198 2.2198 0 0 1-.0693-.1594 2.2081 2.2081 0 0 1-.0465-.1713 2.2039 2.2039 0 0 1-.0228-.1803 2.208 2.208 0 0 1 .0009-.183c.0065-.0606.0181-.1202.0347-.1784.0165-.0582.0378-.1145.0638-.1687a2.226 2.226 0 0 1 .0927-.157c.0361-.0492.0762-.0953.12-.1379a2.2544 2.2544 0 0 1 .1453-.1173 2.2847 2.2847 0 0 1 .163-.0984 2.3155 2.3155 0 0 1 .1769-.0812 2.3498 2.3498 0 0 1 .1877-.0639 2.3875 2.3875 0 0 1 .1949-.0467c.0661-.012.133-.0204.2005-.025a2.4462 2.4462 0 0 1 .2064 0c.0687.0041.1367.0127.2033.0257.0666.013.1316.0303.195.0517.0634.0214.1248.0469.1832.0761.0585.0293.1138.0626.1649.0991.0511.0366.0984.0767.1405.1203.042.0435.0795.0903.1123.14.0328.0498.0607.1023.0837.1572a2.1038 2.1038 0 0 1 .0577.162 2.1 2.1 0 0 1 .0311.1668c.0059.0558.008.1117.0063.1674-.0016.0557-.0072.1111-.0167.1659-.0095.0547-.023.1086-.0404.1611a2.0876 2.0876 0 0 1-.0622.1549 2.0902 2.0902 0 0 1-.0855.1476 2.098 2.098 0 0 1-.1066.1409 2.111 2.111 0 0 1-.1244.1348 2.1236 2.1236 0 0 1-.139.1293c-.0498.0388-.1019.0743-.1558.1061a2.1666 2.1666 0 0 1-.1683.0843 2.1886 2.1886 0 0 1-.1777.0639 2.2074 2.2074 0 0 1-.1838.044 2.2241 2.2241 0 0 1-.1874.025 2.2379 2.2379 0 0 1-.1884.0067 2.2471 2.2471 0 0 1-.1866-.0109 2.2527 2.2527 0 0 1-.1823-.0283 2.2572 2.2572 0 0 1-.1754-.0447 2.2607 2.2607 0 0 1-.1658-.0603 2.2631 2.2631 0 0 1-.1539-.075 2.2649 2.2649 0 0 1-.1393-.0882 2.2659 2.2659 0 0 1-.1228-.1009 2.2664 2.2664 0 0 1-.1041-.1127 2.2663 2.2663 0 0 1-.0836-.1233 2.2661 2.2661 0 0 1-.0618-.1326 2.2655 2.2655 0 0 1-.0388-.1407 2.2651 2.2651 0 0 1-.0149-.1473 2.2649 2.2649 0 0 1 .0097-.1523 2.265 2.265 0 0 1 .0342-.1559 2.2658 2.2658 0 0 1 .0585-.1578 2.2671 2.2671 0 0 1 .0822-.1583 2.2695 2.2695 0 0 1 .1045-.1571 2.2726 2.2726 0 0 1 .125-.1542 2.2766 2.2766 0 0 1 .1436-.1502 2.2811 2.2811 0 0 1 .16-.1457c.0556-.0439.1128-.0854.1712-.1244a2.2905 2.2905 0 0 1 .1808-.1029c.0621-.0316.1253-.0607.1893-.0872a2.3044 2.3044 0 0 1 .1965-.0714c.0672-.0202.1348-.0381.2028-.0533.068-.0153.1362-.0278.2046-.0377.0685-.0099.1371-.0169.2058-.0212.0686-.0042.1372-.0055.2057-.0041.0684.0015.1368.0059.2047.0131.0679.0073.1354.0174.2021.0303.0668.0129.1327.0287.1975.0471.0648.0185.1284.0397.1905.0637.0621.024.1226.0507.1811.0804.0586.0297.1151.0623.1689.0979.0538.0355.1049.0741.1527.1154.0478.0414.0922.0855.1328.1325a2.2764 2.2764 0 0 1 .2071.3259 2.2627 2.2627 0 0 1 .1395.374 2.2518 2.2518 0 0 1 .0691.3971 2.2462 2.2462 0 0 1-.0042.4042 2.2455 2.2455 0 0 1-.0773.3923 2.2505 2.2505 0 0 1-.1498.3689 2.262 2.262 0 0 1-.2207.3359 2.2834 2.2834 0 0 1-.288.2944 2.3156 2.3156 0 0 1-.351.2465 2.3631 2.3631 0 0 1-.4046.1939"/></svg>
+        <span>PostgreSQL</span>
+      </div>
+      <div class="stack-item glass anim-up d1">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#13AA52"><path d="M17.193 9.166c-.339-1.334-1.494-2.733-3.375-3.677 1.052-3.485 2.921-5.49 3.766-5.49.852 0 1.553.698 1.553 1.554 0 .856-.701 1.552-1.553 1.552-.422 0-.808-.168-1.089-.444l-.001.001c-.282.276-.458.658-.458 1.082 0 .421.174.803.456 1.079l.002.001c.281-.277.668-.449 1.09-.449.423 0 .808.17 1.09.449l.001-.001c.281-.276.458-.658.458-1.079 0-.424-.176-.806-.458-1.082l.001-.001c.351.334.572.805.572 1.327 0 1.015-.824 1.838-1.838 1.838-.515 0-.982-.213-1.317-.554l.001-.001c-.333.341-.8.554-1.316.554-1.014 0-1.838-.823-1.838-1.838 0-.522.22-.993.573-1.327l-.001.001c-.283.276-.459.658-.459 1.082 0 .421.175.803.457 1.079l.002-.001c.281-.277.667-.449 1.09-.449.422 0 .808.17 1.089.449l.001.001c.283-.276.459-.658.459-1.079 0-.424-.176-.806-.459-1.082l-.001-.001c-.28.276-.666.444-1.088.444-.852 0-1.553-.696-1.553-1.552 0-.856.701-1.554 1.553-1.554.845 0 2.714 2.005 3.766 5.49z"/></svg>
+        <span>MongoDB</span>
+      </div>
+      <div class="stack-item glass anim-up d2">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#FFCA28"><path d="M3.89 15.672L6.255.461A.542.542 0 0 1 7.27.288l2.543 4.771zm16.794 3.692l-2.25-14a.54.54 0 0 0-.918-.295L3.889 18.451l7.373 4.142a1.52 1.52 0 0 0 1.463 0zm-7.907-6.55l-3.463-5.62 8.088 2.384z"/></svg>
+        <span>Firebase</span>
+      </div>
+      <div class="stack-item glass anim-up d3">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" style="color:var(--text)"><path d="M11.572 0c-.176 0-.31.001-.358.007a19.76 19.76 0 0 1-.364.033C7.443.346 4.25 2.185 2.228 5.012a11.875 11.875 0 0 0-2.119 5.243c-.096.659-.108.854-.108 1.747s.012 1.089.108 1.748c.652 4.506 3.86 8.292 8.209 9.695.779.25 1.6.422 2.534.525.363.04 1.935.04 2.299 0 1.611-.178 2.977-.577 4.323-1.264.207-.106.247-.134.219-.158-.02-.013-.9-1.193-1.955-2.62l-1.919-2.592-2.404-3.558a338.739 338.739 0 0 0-2.422-3.556c-.009-.002-.018 1.579-.023 3.51-.007 3.38-.01 3.515-.052 3.595a.426.426 0 0 1-.206.214c-.075.037-.14.044-.495.044H7.81l-.108-.068a.438.438 0 0 1-.157-.171l-.05-.106.006-4.703.007-4.705.072-.092a.645.645 0 0 1 .174-.143c.096-.047.134-.051.54-.051.478 0 .558.018.682.154.035.038 1.337 1.999 2.895 4.361a10760.433 10760.433 0 0 0 4.735 7.17l1.9 2.879.096-.063a12.317 12.317 0 0 0 2.466-2.163 11.944 11.944 0 0 0 2.824-6.134c.096-.66.108-.854.108-1.748 0-.893-.012-1.088-.108-1.747C23.773 5.25 20.268 1.304 15.6.136A13.806 13.806 0 0 0 12.25.003c-.126-.003-.26-.005-.676-.005zm1.57 7.256a.476.476 0 0 1 .238.404v.01l-.002 4.704-.003 4.704.077-.087-.052 4.62v-4.534l.006 4.533c-.006 0-.008-1.578-.009-3.505-.005-3.435-.01-3.57-.047-3.582-.022-.006-.01.002-.014.023-.007.042-.009.042-.009-1.672v-1.714l.008-4.498a.3.3 0 0 0-.148-.256.302.302 0 0 0-.152-.04h-4.16L9.129 8.16l-2.412 3.558c-.005.002-.009-1.58-.009-3.51V4.698l.006-4.498a.3.3 0 0 0-.148-.256.302.302 0 0 0-.152-.04H2.254A.3.3 0 0 0 2.107 0a.302.302 0 0 0-.152.04l-.006.009L1.942.059C1.912.077 1.891.1 1.878.129a.3.3 0 0 0-.03.14v9.37c0 .097.05.185.13.234.08.05.18.054.263.009l1.85-.872 1.852-.872-.006.006 1.852-.872.006-.003 3.709-1.745c.167-.079.256-.273.208-.451l-.001-.004L9.717 4.49a.3.3 0 0 0-.03-.06.3.3 0 0 0-.219-.183H5.308a.302.302 0 0 0-.223.075L3.22 6.01 1.357 7.696l-.005.004A11.968 11.968 0 0 0 .086 12a11.958 11.958 0 0 0 2.463 7.404 11.896 11.896 0 0 0 8.086 4.459 12.15 12.15 0 0 0 2.84-.082 11.958 11.958 0 0 0 8.086-4.459A11.964 11.964 0 0 0 24 12c0-.182-.003-.363-.007-.544a11.903 11.903 0 0 0-3.065-7.58 11.93 11.93 0 0 0-7.789-4.08c-.43-.049-.86-.066-1.295-.057a12.07 12.07 0 0 0-1.294.057 11.958 11.958 0 0 0-8.086 4.459 11.964 11.964 0 0 0-2.457 7.401c0 .182.003.363.007.544h.003a11.944 11.944 0 0 0 .45 2.974c.006.02.013.041.02.061h-.006l.006-.001 3.714-1.747c.083-.039.15-.11.185-.197l.008-.022.001-.004-.003-.01a8.86 8.86 0 0 1-.247-2.094c0-.34.019-.679.055-1.014a8.81 8.81 0 0 1 1.682-4.45 8.802 8.802 0 0 1 6.386-3.57 8.99 8.99 0 0 1 .961-.003 8.8 8.8 0 0 1 5.42 2.147l-5.42-2.147a.476.476 0 0 1 .186.406v.01z"/></svg>
+        <span>Next.js</span>
+      </div>
+      <div class="stack-item glass anim-up d4">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="#61DAFB"><path d="M14.23 12.004a2.236 2.236 0 0 1-2.235 2.236 2.236 2.236 0 0 1-2.236-2.236 2.236 2.236 0 0 1 2.235-2.236 2.236 2.236 0 0 1 2.236 2.236zm2.648-10.69c-1.346 0-3.107.96-4.888 2.622-1.78-1.653-3.542-2.602-4.887-2.602-.41 0-.783.093-1.106.278-1.375.793-1.683 3.264-.973 6.365C1.98 8.917 0 10.42 0 12.004c0 1.59 1.99 3.097 5.043 4.03-.704 3.113-.39 5.588.988 6.38.32.187.69.275 1.102.275 1.345 0 3.107-.96 4.888-2.624 1.78 1.654 3.542 2.603 4.887 2.603.41 0 .783-.09 1.106-.275 1.374-.792 1.683-3.263.973-6.365C22.02 15.096 24 13.59 24 12.004c0-1.59-1.99-3.097-5.043-4.032.704-3.11.39-5.587-.988-6.38a2.167 2.167 0 0 0-1.092-.278zm-.005 1.09c.278 0 .487.06.63.141.559.324.864 1.576.752 3.17-.023.314-.061.637-.109.966a25.04 25.04 0 0 0-3.296-.673 25.717 25.717 0 0 0-2.164-2.802c.815-.786 1.63-1.348 2.37-1.671.526-.229.976-.33 1.348-.331zm-9.74.239c.37 0 .819.1 1.344.33.739.324 1.555.887 2.37 1.674a25.716 25.716 0 0 0-2.162 2.8 25.355 25.355 0 0 0-3.295.673 21.07 21.07 0 0 1-.108-.963c-.11-1.594.196-2.847.754-3.173.144-.081.354-.141.633-.141zm4.87 2.85a28.64 28.64 0 0 1 1.484 1.824 28.85 28.85 0 0 1-2.968 0 28.51 28.51 0 0 1 1.484-1.824zm-3.498 2.18a27.75 27.75 0 0 0-.776 2.196 27.44 27.44 0 0 1-1.773-1.03c.496-.21 1.028-.41 1.55-.6.327-.12.662-.238 1-.366zm6.996 0c.337.128.671.244.997.363.52.19 1.054.39 1.553.6a27.42 27.42 0 0 1-1.772 1.032 27.58 27.58 0 0 0-.778-2.195zm1.008 3.166c.17.55.313 1.098.427 1.636a27.476 27.476 0 0 1-2.035.444 28.007 28.007 0 0 0 .91-1.4c.25-.406.488-.822.698-1.244a27.4 27.4 0 0 1 0 .564zM6.44 15.27a27.38 27.38 0 0 0-.427-1.636c.21.422.448.838.699 1.245.295.473.6.93.91 1.4a27.424 27.424 0 0 1-2.035-.445c.113-.538.257-1.085.426-1.636l.427.072zm-1.01.43c-.17-.55-.313-1.098-.427-1.636a27.476 27.476 0 0 1 2.035-.444 28.007 28.007 0 0 0-.91 1.4c-.25.406-.488.822-.698 1.244a27.4 27.4 0 0 1 0-.564zm8.006-.564c-.21-.422-.448-.838-.699-1.245-.295-.473-.6-.93-.91-1.4a27.424 27.424 0 0 1 2.035.445c-.113.538-.257 1.085-.426 1.636l-.427-.072zm-3.975 5.232c.278 0 .487-.06.63-.141.559-.324.864-1.576.752-3.17-.023-.314-.061-.637-.109-.966a25.04 25.04 0 0 0 3.296.673 25.717 25.717 0 0 0 2.164 2.802c-.815.786-1.63 1.348-2.37 1.671-.526.229-.976.33-1.348.331-.278 0-.487-.06-.63-.141-.559-.324-.864-1.576-.752-3.17z"/></svg>
+        <span>React</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section id="team" style="background:rgba(255,255,255,.01)">
+  <div class="container">
+    <div class="section-head center anim-up">
+      <div class="section-label" data-i18n="team_label">Equipe</div>
+      <h2 class="section-title" data-i18n="team_title">Os Criadores</h2>
+      <p class="section-desc" style="margin-top:.75rem" data-i18n="team_desc">Mentes por trás do projeto.</p>
+    </div>
+    <div class="team-grid" style="max-width:56rem;margin:0 auto">
+      <div class="team-card glass anim-up d1">
+        <div class="team-avatar">
+          <img src="https://avatars.githubusercontent.com/u/108341604?v=4" alt="Matheus Lucindo" loading="lazy" />
         </div>
-    </section>
+        <div>
+          <div class="team-name">Matheus Lucindo</div>
+          <div class="team-role" data-i18n="role_matheus">Dev & Manager</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- Footer -->
-    <footer class="py-24 border-t border-white/5 text-center bg-black">
-        <p class="text-zinc-600 font-bold text-[10px] uppercase tracking-[0.6em] mb-6" data-i18n="footer_rights">© 2026 Agendei. Todos os direitos reservados.</p>
-    </footer>
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-head center anim-up">
+      <div class="section-label" data-i18n="faq_label">Suporte</div>
+      <h2 class="section-title" data-i18n="faq_title">Dúvidas Frequentes</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item glass anim-up d1">
+        <button class="faq-q">
+          <span data-i18n="faq_q1">O sistema é gratuito?</span>
+          <div class="faq-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </button>
+        <div class="faq-a" data-i18n="faq_a1">Sim, a versão Alpha do Agendei está disponível gratuitamente para testes e validação da plataforma.</div>
+      </div>
+      <div class="faq-item glass anim-up d2">
+        <button class="faq-q">
+          <span data-i18n="faq_q2">Posso usar em múltiplos dispositivos?</span>
+          <div class="faq-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </button>
+        <div class="faq-a" data-i18n="faq_a2">Sim, sincronizamos tudo em tempo real em todos os seus dispositivos. Acesse pelo app Android ou pelo painel web.</div>
+      </div>
+      <div class="faq-item glass anim-up d3">
+        <button class="faq-q">
+          <span data-i18n="faq_q3">Há suporte ao cliente?</span>
+          <div class="faq-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </button>
+        <div class="faq-a" data-i18n="faq_a3">Sim, oferecemos suporte ativo para todos os nossos usuários durante o período Alpha.</div>
+      </div>
+      <div class="faq-item glass anim-up d4">
+        <button class="faq-q">
+          <span data-i18n="faq_q4">Quando a versão Beta será lançada?</span>
+          <div class="faq-chevron"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--orange)" stroke-width="3"><polyline points="6 9 12 15 18 9"/></svg></div>
+        </button>
+        <div class="faq-a" data-i18n="faq_a4">Estamos trabalhando ativamente no desenvolvimento. Siga-nos para atualizações sobre o lançamento da versão Beta.</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script>
-        const lenis = new Lenis({ duration: 1.4, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), smoothWheel: true });
-        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
-        requestAnimationFrame(raf);
+<!-- CTA -->
+<section id="pricing" style="padding-bottom:2rem">
+  <div class="container">
+    <div class="cta-banner anim-up">
+      <div class="tag" style="margin:0 auto 1.5rem">✦ Alpha Gratuito</div>
+      <h2 data-i18n="cta_title">Pronto para transformar<br>sua barbearia?</h2>
+      <p data-i18n="cta_desc">Comece gratuitamente hoje e descubra por que o Agendei é a escolha certa para o seu negócio.</p>
+      <a href="https://agendei-alpha.vercel.app" class="btn-primary" data-i18n="cta_btn">Começar Grátis Agora</a>
+    </div>
+  </div>
+</section>
 
-        const translations = {
-            pt: {
-                nav_platform: "Plataforma", nav_eco: "Ecossistema", nav_team: "Criadores", nav_faq: "FAQ",
-                hero_title: "GERENCIE COM <br> <span class='text-primary'>PRECISÃO.</span>",
-                hero_desc: "A plataforma definitiva para cabeleireiros e barbearias que buscam excelência operacional e faturamento inteligente.",
-                nav_app: "Entrar", marquee_title: "Impulsionado pelas melhores tecnologias do mundo",
-                plat_title: "Uma ferramenta, <br> infinitas possibilidades.",
-                plat_desc: "O Agendei foi projetado para cobrir cada centímetro da operação do seu negócio.",
-                feat_1_title: "Agenda Dinâmica", feat_1_desc: "Sincronização em tempo real para evitar conflitos de horários e otimizar a produtividade.",
-                feat_2_title: "Gestão Financeira", feat_2_desc: "Controle de caixa, fluxo de despesas e metas com dashboards visuais de alta precisão.",
-                feat_3_title: "CRM de Clientes", feat_3_desc: "Banco de dados completo com histórico de serviços para fidelização inteligente.",
-                eco_title: "Stack de Alta Performance", eco_desc: "Utilizamos as tecnologias que sustentam as maiores plataformas do mundo.",
-                team_title: "Os Criadores", team_subtitle: "Mentes por trás do projeto", role_matheus: "Desenvolvedor & Gerente",
-                faq_title: "Dúvidas Frequentes",
-                faq_q1: "O sistema é gratuito?", faq_a1: "Sim, a versão Alpha do Agendei está disponível gratuitamente para testes.",
-                footer_rights: "© 2026 Agendei. Todos os direitos reservados."
-            },
-            en: {
-                nav_platform: "Platform", nav_eco: "Ecosystem", nav_team: "Creators", nav_faq: "FAQ",
-                hero_title: "MANAGE WITH <br> <span class='text-primary'>PRECISION.</span>",
-                hero_desc: "The definitive platform for hairdressers and barbershops seeking operational excellence and intelligent revenue.",
-                nav_app: "Launch", marquee_title: "Powered by world-class technologies",
-                plat_title: "One tool, <br> infinite possibilities.",
-                plat_desc: "Agendei was designed to cover every inch of your business operation.",
-                feat_1_title: "Dynamic Agenda", feat_1_desc: "Real-time sync to prevent conflicts and boost barber productivity.",
-                feat_2_title: "Financial Management", feat_2_desc: "Cash control, expenses, and goals with high-precision visual dashboards.",
-                feat_3_title: "Customer CRM", feat_3_desc: "Complete database with service history for better loyalty campaigns.",
-                eco_title: "High Performance Stack", eco_desc: "We use technologies that power the world's largest platforms.",
-                team_title: "The Creators", team_subtitle: "Minds behind the project", role_matheus: "Dev & Manager",
-                faq_title: "Common Questions",
-                faq_q1: "Is the system free?", faq_a1: "Yes, the Alpha version is currently free for testing and validation.",
-                footer_rights: "© 2026 Agendei. All rights reserved."
-            }
-        };
+<!-- FOOTER -->
+<footer class="container">
+  <div class="footer-logo">
+    <div class="nav-logo-icon" style="width:1.8rem;height:1.8rem;border-radius:.5rem">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.8">
+        <circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/>
+        <line x1="20" y1="4" x2="8.5" y2="15.5"/><line x1="14.5" y1="12.5" x2="20" y2="18"/>
+        <line x1="8.5" y1="8.5" x2="12.5" y2="12.5"/>
+      </svg>
+    </div>
+    <span style="font-size:.9rem;font-weight:800;letter-spacing:-.02em;text-transform:uppercase">AGENDEI<span class="text-orange">.</span></span>
+  </div>
+  <p class="footer-copy" data-i18n="footer_rights">© 2026 Agendei. Todos os direitos reservados.</p>
+  <div class="footer-links">
+    <a href="#features" data-i18n="nav_features">Funcionalidades</a>
+    <a href="#faq" data-i18n="nav_faq">FAQ</a>
+    <a href="#team" data-i18n="nav_team">Sobre</a>
+  </div>
+</footer>
 
-        function setLang(lang) {
-            document.querySelectorAll('[data-i18n]').forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                el.innerHTML = translations[lang][key];
-            });
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`btn-${lang}`).classList.add('active');
-        }
+<script>
+// ─── TRANSLATIONS ───
+const T = {
+  pt: {
+    nav_platform:'Plataforma', nav_features:'Funcionalidades', nav_pricing:'Preços',
+    nav_team:'Sobre', nav_faq:'FAQ', nav_enter:'Entrar',
+    hero_title_1:'GERENCIE COM <br><span class="text-orange">PRECISÃO.</span>',
+    hero_desc:'A plataforma definitiva para cabeleireiros e barbearias que buscam excelência operacional e faturamento inteligente.',
+    btn_start:'Começar Grátis', btn_learn:'Ver Funcionalidades',
+    stat_appt:'Agendamentos', stat_lang:'Idiomas', stat_version:'Versão Atual', stat_free:'Gratuito',
+    feat_label:'Plataforma',
+    feat_title:'Uma ferramenta,<br>infinitas possibilidades.',
+    feat_desc:'O Agendei foi projetado para cobrir cada aspecto da operação do seu negócio com precisão.',
+    f1_title:'Agenda Dinâmica', f1_desc:'Sincronização em tempo real para evitar conflitos de horários e maximizar a produtividade da equipe.', f1_tag:'Real-time',
+    f2_title:'Gestão Financeira', f2_desc:'Controle de caixa, fluxo de despesas e metas com dashboards visuais de alta precisão.', f2_tag:'Dashboards',
+    f3_title:'CRM de Clientes', f3_desc:'Banco de dados completo com histórico de serviços para fidelização e campanhas inteligentes.', f3_tag:'CRM',
+    f4_title:'Notificações', f4_desc:'Alertas inteligentes para clientes e profissionais via push, SMS ou WhatsApp.', f4_tag:'Automático',
+    f5_title:'Relatórios', f5_desc:'Análises detalhadas de desempenho, receita e satisfação para decisões estratégicas.', f5_tag:'Analytics',
+    f6_title:'App Mobile', f6_desc:'Gerencie sua barbearia de qualquer lugar com o aplicativo nativo Android em Kotlin.', f6_tag:'Android',
+    how_label:'Como funciona', how_title:'Simples de usar,<br>poderoso por dentro.',
+    step1_title:'Cadastre seu negócio', step1_desc:'Configure sua barbearia em minutos. Adicione serviços, profissionais e horários.',
+    step2_title:'Receba agendamentos', step2_desc:'Clientes agendam online 24h por dia. Você gerencia tudo no app.',
+    step3_title:'Cresça com dados', step3_desc:'Analise relatórios e tome decisões estratégicas baseadas em dados reais.',
+    stack_label:'Tecnologia', stack_title:'Stack de Alta Performance',
+    stack_desc:'Utilizamos as tecnologias que sustentam as maiores plataformas do mundo.',
+    team_label:'Equipe', team_title:'Os Criadores', team_desc:'Mentes por trás do projeto.',
+    role_matheus:'Desenvolvedor & Gerente',
+    faq_label:'Suporte', faq_title:'Dúvidas Frequentes',
+    faq_q1:'O sistema é gratuito?', faq_a1:'Sim, a versão Alpha do Agendei está disponível gratuitamente para testes e validação da plataforma.',
+    faq_q2:'Posso usar em múltiplos dispositivos?', faq_a2:'Sim, sincronizamos tudo em tempo real em todos os seus dispositivos.',
+    faq_q3:'Há suporte ao cliente?', faq_a3:'Sim, oferecemos suporte ativo para todos os nossos usuários durante o período Alpha.',
+    faq_q4:'Quando a versão Beta será lançada?', faq_a4:'Estamos trabalhando ativamente no desenvolvimento. Siga-nos para atualizações.',
+    cta_title:'Pronto para transformar<br>sua barbearia?',
+    cta_desc:'Comece gratuitamente hoje e descubra por que o Agendei é a escolha certa para o seu negócio.',
+    cta_btn:'Começar Grátis Agora',
+    footer_rights:'© 2026 Agendei. Todos os direitos reservados.'
+  },
+  en: {
+    nav_platform:'Platform', nav_features:'Features', nav_pricing:'Pricing',
+    nav_team:'About', nav_faq:'FAQ', nav_enter:'Launch',
+    hero_title_1:'MANAGE WITH <br><span class="text-orange">PRECISION.</span>',
+    hero_desc:'The definitive platform for hairdressers and barbershops seeking operational excellence and intelligent revenue.',
+    btn_start:'Get Started Free', btn_learn:'See Features',
+    stat_appt:'Appointments', stat_lang:'Languages', stat_version:'Current Version', stat_free:'Free',
+    feat_label:'Platform',
+    feat_title:'One tool,<br>infinite possibilities.',
+    feat_desc:'Agendei is designed to cover every aspect of your business operation with precision.',
+    f1_title:'Dynamic Agenda', f1_desc:'Real-time sync to prevent scheduling conflicts and maximize team productivity.', f1_tag:'Real-time',
+    f2_title:'Financial Management', f2_desc:'Cash control, expense tracking, and goals with high-precision visual dashboards.', f2_tag:'Dashboards',
+    f3_title:'Customer CRM', f3_desc:'Complete database with service history for intelligent loyalty and campaigns.', f3_tag:'CRM',
+    f4_title:'Notifications', f4_desc:'Smart alerts for clients and professionals via push, SMS, or WhatsApp.', f4_tag:'Automated',
+    f5_title:'Reports', f5_desc:'Detailed performance, revenue, and satisfaction analytics for strategic decisions.', f5_tag:'Analytics',
+    f6_title:'Mobile App', f6_desc:'Manage your barbershop from anywhere with the native Android app built in Kotlin.', f6_tag:'Android',
+    how_label:'How it works', how_title:'Simple to use,<br>powerful inside.',
+    step1_title:'Set up your business', step1_desc:'Configure your barbershop in minutes. Add services, professionals, and hours.',
+    step2_title:'Receive bookings', step2_desc:'Clients book online 24/7. You manage everything in the app.',
+    step3_title:'Grow with data', step3_desc:'Analyze reports and make strategic decisions based on real data.',
+    stack_label:'Technology', stack_title:'High Performance Stack',
+    stack_desc:'We use technologies that power the world\'s largest platforms.',
+    team_label:'Team', team_title:'The Creators', team_desc:'Minds behind the project.',
+    role_matheus:'Developer & Manager',
+    faq_label:'Support', faq_title:'Frequently Asked Questions',
+    faq_q1:'Is the system free?', faq_a1:'Yes, the Alpha version is currently free for testing and validation.',
+    faq_q2:'Can I use it on multiple devices?', faq_a2:'Yes, we sync everything in real-time across all your devices.',
+    faq_q3:'Is there customer support?', faq_a3:'Yes, we offer active support for all our users during the Alpha period.',
+    faq_q4:'When will the Beta version launch?', faq_a4:'We are actively developing. Follow us for updates on the Beta launch.',
+    cta_title:'Ready to transform<br>your barbershop?',
+    cta_desc:'Start for free today and discover why Agendei is the right choice for your business.',
+    cta_btn:'Get Started Free Now',
+    footer_rights:'© 2026 Agendei. All rights reserved.'
+  },
+  es: {
+    nav_platform:'Plataforma', nav_features:'Características', nav_pricing:'Precios',
+    nav_team:'Acerca de', nav_faq:'FAQ', nav_enter:'Entrar',
+    hero_title_1:'GESTIONA CON <br><span class="text-orange">PRECISIÓN.</span>',
+    hero_desc:'La plataforma definitiva para peluquerías y barberías que buscan excelencia operativa e ingresos inteligentes.',
+    btn_start:'Empezar Gratis', btn_learn:'Ver Características',
+    stat_appt:'Citas', stat_lang:'Idiomas', stat_version:'Versión Actual', stat_free:'Gratuito',
+    feat_label:'Plataforma',
+    feat_title:'Una herramienta,<br>infinitas posibilidades.',
+    feat_desc:'Agendei está diseñado para cubrir cada aspecto de la operación de tu negocio con precisión.',
+    f1_title:'Agenda Dinámica', f1_desc:'Sincronización en tiempo real para evitar conflictos y maximizar la productividad.', f1_tag:'Tiempo real',
+    f2_title:'Gestión Financiera', f2_desc:'Control de caja, gastos y metas con paneles visuales de alta precisión.', f2_tag:'Dashboards',
+    f3_title:'CRM de Clientes', f3_desc:'Base de datos completa con historial de servicios para fidelización inteligente.', f3_tag:'CRM',
+    f4_title:'Notificaciones', f4_desc:'Alertas inteligentes para clientes y profesionales vía push, SMS o WhatsApp.', f4_tag:'Automático',
+    f5_title:'Reportes', f5_desc:'Análisis detallados de rendimiento, ingresos y satisfacción para decisiones estratégicas.', f5_tag:'Analytics',
+    f6_title:'App Móvil', f6_desc:'Gestiona tu barbería desde cualquier lugar con la app nativa Android en Kotlin.', f6_tag:'Android',
+    how_label:'Cómo funciona', how_title:'Simple de usar,<br>poderoso por dentro.',
+    step1_title:'Registra tu negocio', step1_desc:'Configura tu barbería en minutos. Agrega servicios, profesionales y horarios.',
+    step2_title:'Recibe reservas', step2_desc:'Los clientes reservan en línea 24/7. Gestionas todo en la app.',
+    step3_title:'Crece con datos', step3_desc:'Analiza reportes y toma decisiones estratégicas basadas en datos reales.',
+    stack_label:'Tecnología', stack_title:'Stack de Alto Rendimiento',
+    stack_desc:'Utilizamos tecnologías que impulsan las plataformas más grandes del mundo.',
+    team_label:'Equipo', team_title:'Los Creadores', team_desc:'Mentes detrás del proyecto.',
+    role_matheus:'Desarrollador & Gerente',
+    faq_label:'Soporte', faq_title:'Preguntas Frecuentes',
+    faq_q1:'¿El sistema es gratuito?', faq_a1:'Sí, la versión Alpha de Agendei está disponible gratuitamente para pruebas.',
+    faq_q2:'¿Puedo usarlo en múltiples dispositivos?', faq_a2:'Sí, sincronizamos todo en tiempo real en todos tus dispositivos.',
+    faq_q3:'¿Hay soporte al cliente?', faq_a3:'Sí, ofrecemos soporte activo para todos nuestros usuarios durante el período Alpha.',
+    faq_q4:'¿Cuándo se lanzará la versión Beta?', faq_a4:'Estamos desarrollando activamente. Síguenos para actualizaciones del lanzamiento Beta.',
+    cta_title:'¿Listo para transformar<br>tu barbería?',
+    cta_desc:'Comienza gratis hoy y descubre por qué Agendei es la elección correcta para tu negocio.',
+    cta_btn:'Empezar Gratis Ahora',
+    footer_rights:'© 2026 Agendei. Todos los derechos reservados.'
+  }
+};
 
-        gsap.registerPlugin(ScrollTrigger);
-        gsap.from(".hero-reveal > *", { y: 50, opacity: 0, duration: 1.2, stagger: 0.15, ease: "power4.out" });
-        gsap.to("#tech-section", { opacity: 1, duration: 1, delay: 0.5 });
-        gsap.from(".mockup-anim", { scrollTrigger: { trigger: "#mockup-trigger", start: "top 90%", scrub: 1 }, y: 100, scale: 0.9, opacity: 0, duration: 2, ease: "expo.out" });
-        gsap.utils.toArray('.reveal-up').forEach(el => { gsap.from(el, { scrollTrigger: { trigger: el, start: "top 85%" }, y: 60, opacity: 0, duration: 1.5, ease: "expo.out" }); });
-    </script>
+let currentLang = localStorage.getItem('lang') || 'pt';
+
+function applyLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('lang', lang);
+  const dict = T[lang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.getAttribute('data-i18n');
+    if (dict[k] !== undefined) el.innerHTML = dict[k];
+  });
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+});
+
+// ─── THEME ───
+let dark = localStorage.getItem('theme') !== 'light';
+function applyTheme() {
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+  document.getElementById('theme-toggle').textContent = dark ? '🌙' : '☀️';
+  localStorage.setItem('theme', dark ? 'dark' : 'light');
+}
+document.getElementById('theme-toggle').addEventListener('click', () => { dark = !dark; applyTheme(); });
+
+// ─── NAV SCROLL ───
+window.addEventListener('scroll', () => {
+  document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+// ─── FAQ ───
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.querySelector('.faq-q').addEventListener('click', () => {
+    const open = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if (!open) item.classList.add('open');
+  });
+});
+
+// ─── SCROLL REVEAL ───
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+}, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.anim-up').forEach(el => observer.observe(el));
+
+// ─── INIT ───
+applyTheme();
+applyLang(currentLang);
+</script>
 </body>
 </html>
