@@ -1013,9 +1013,25 @@ const observer = new IntersectionObserver(entries => {
 }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 document.querySelectorAll('.anim-up').forEach(el => observer.observe(el));
 
+function alertMobile (){
+  if (window.innerWidth <= 480 ){
+     const modal = document.createElement('div');
+  modal.style.cssText = `position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 9999;`;
+  modal.innerHTML = `
+    <div style="background: var(--bg); padding: 4rem 2.5rem;  text-align: center; max-width: 420px; border: 1px solid var(--border);">
+      <h2 style="font-size: 1.8rem; margin-bottom: 1.5rem; font-weight: 900;">ACESSO MOBILE!</h2>
+      <p style="font-size: 1.05rem; margin-bottom: 2.5rem; color: var(--muted); line-height: 1.8;">Para melhor experiência, recomendamos usar nosso app, ou acessar este site por um outro dispositivo!</p>
+      <button onclick="this.parentElement.parentElement.remove()" style="padding: 1rem 2.5rem; background: var(--orange); color: #000; border: none; border-radius: 9999px; cursor: pointer; font-weight: 700; font-size: 0.95rem; transition: all 0.3s ease;">Fechar</button>
+    </div>
+  `;
+  document.body.appendChild(modal);
+  }
+}
+
 // ─── INIT ───
 applyTheme();
 applyLang(currentLang);
+alertMobile();
 </script>
 </body>
 </html>
