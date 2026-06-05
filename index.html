@@ -130,6 +130,51 @@
       color: var(--muted);
     }
     @media(min-width:1024px){ .nav-links { display: flex; } }
+    @media(max-width:768px) {
+      nav {
+        padding: .9rem 1rem;
+        flex-wrap: wrap;
+        gap: .8rem;
+      }
+      .nav-right {
+        gap: .6rem;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+      }
+      .lang-switcher {
+        display: flex;
+        order: 0;
+        flex-shrink: 0;
+      }
+      .theme-toggle {
+        width: 2rem;
+        height: 2rem;
+        order: -1;
+      }
+      .btn-enter {
+        padding: .55rem 1.25rem;
+        font-size: .65rem;
+        order: 1;
+        flex-shrink: 0;
+      }
+      .cta-banner {
+        padding: 3rem 1.5rem;
+      }
+      .cta-banner h2 {
+        font-size: clamp(1.8rem, 6vw, 2.4rem);
+      }
+      .cta-banner p {
+        max-width: 100%;
+      }
+      .cta-banner .btn-primary {
+        display: inline-flex;
+        width: 100%;
+        justify-content: center;
+        white-space: normal;
+        padding: .85rem 1.25rem;
+        font-size: .75rem;
+      }
+    }
     .nav-links a { transition: color var(--transition); position: relative; padding-bottom: .3rem; }
     .nav-links a::after {
       content:''; position:absolute; bottom:0; left:0; width:0; height:1.5px;
